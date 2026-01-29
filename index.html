@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>HPA SKU Catalog (Inline Data)</title>
+  <title>HPA SKU Catalog (Shared CSV)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
@@ -515,11 +515,11 @@
         <div class="title-block">
           <h1>
             HPA SKU Catalog
-            <span class="pill">Inline Data</span>
+            <span class="pill">Shared CSV</span>
           </h1>
           <p class="subtitle">
-            Browse SKUs, then switch to Manage tab (password required) to add/remove. Data is saved in this browser,
-            and you can import/export CSV to share across devices.
+            Browse SKUs from a shared CSV hosted on GitHub Pages. Use the Manage tab (password HF-HPA) to adjust SKUs
+            and export an updated CSV.
           </p>
         </div>
       </div>
@@ -527,10 +527,6 @@
         <button id="resetBtn" class="btn btn-primary" type="button">
           <span class="icon">🔄</span>
           Reset filters
-        </button>
-        <button id="clearAllBtn" class="btn btn-secondary" type="button">
-          <span class="icon">🧹</span>
-          Clear saved SKUs
         </button>
       </div>
     </header>
@@ -589,9 +585,7 @@
       </div>
 
       <!-- SKU GRID -->
-      <section id="skuGrid" class="sku-grid">
-        <!-- Cards injected by JavaScript -->
-      </section>
+      <section id="skuGrid" class="sku-grid"></section>
 
       <div id="emptyState" class="empty-state" style="display:none;">
         No SKUs match your filters. Try clearing one or more fields, or add a new SKU in the Manage tab.
@@ -617,12 +611,13 @@
             </button>
           </div>
           <div id="authStatus" class="auth-status">
-            Enter password <strong>HF-HPA</strong> to enable add and remove actions.
+            Enter password <strong>HF-HPA</strong> to enable add and remove actions (session only).
           </div>
         </div>
 
         <p style="font-size:0.75rem;color:var(--muted);margin-top:4px;">
-          Once unlocked, you can add SKUs below and remove them from the Browse tab. Use Import/Export CSV to sync between devices.
+          Once unlocked, you can add SKUs below and remove them from the Browse tab. Use Download CSV to create a new
+          <strong>SKU_Name_2026.csv</strong> and upload it to GitHub so everyone sees your changes.
         </p>
 
         <div class="add-sku-grid">
@@ -645,53 +640,24 @@
         </div>
         <div class="add-sku-actions">
           <button id="addSkuBtn" class="btn btn-primary btn-small" type="button" disabled>
-            <span class="icon">✅</span> Add SKU to List
+            <span class="icon">✅</span> Add SKU to List (session only)
           </button>
           <button id="downloadCsvBtn" class="btn btn-small" type="button">
-            <span class="icon">⬇️</span> Download CSV
+            <span class="icon">⬇️</span> Download Updated CSV
           </button>
-          <button id="importCsvBtn" class="btn btn-small btn-secondary" type="button">
-            <span class="icon">📥</span> Import CSV
-          </button>
-          <input id="importFile" type="file" accept=".csv" />
         </div>
       </section>
     </section>
   </main>
 
   <script>
-    /* ===========================
-       1. DATA & STORAGE
-       =========================== */
-    let skuData = []; // all SKUs user-added
-    const STORAGE_KEY = 'hpaSkuData_v3';
+    // Shared CSV URL on GitHub Pages
+    const CSV_URL = 'https://hf-hpa.github.io/hpa-sku-catalog/SKU_Name_2026.csv';
     const PASSWORD = 'HF-HPA';
+
+    let skuData = [];
     let isAuthorized = false;
 
-    function loadFromStorage() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return;
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)) {
-          skuData = parsed;
-        }
-      } catch (e) {
-        console.error('Error loading from localStorage', e);
-      }
-    }
-
-    function saveToStorage() {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(skuData));
-      } catch (e) {
-        console.error('Error saving to localStorage', e);
-      }
-    }
-
-    /* ===========================
-       2. UI HANDLES
-       =========================== */
     const nameFilter = document.getElementById('nameFilter');
     const skuFilter = document.getElementById('skuFilter');
     const sentInFilter = document.getElementById('sentInFilter');
@@ -700,7 +666,6 @@
     const resultCount = document.getElementById('resultCount');
     const emptyState = document.getElementById('emptyState');
     const resetBtn = document.getElementById('resetBtn');
-    const clearAllBtn = document.getElementById('clearAllBtn');
 
     const addYear = document.getElementById('addYear');
     const addName = document.getElementById('addName');
@@ -708,8 +673,6 @@
     const addSentIn = document.getElementById('addSentIn');
     const addSkuBtn = document.getElementById('addSkuBtn');
     const downloadCsvBtn = document.getElementById('downloadCsvBtn');
-    const importCsvBtn = document.getElementById('importCsvBtn');
-    const importFile = document.getElementById('importFile');
 
     const adminPassword = document.getElementById('adminPassword');
     const unlockBtn = document.getElementById('unlockBtn');
@@ -719,18 +682,17 @@
     const tabBrowse = document.getElementById('tab-browse');
     const tabManage = document.getElementById('tab-manage');
 
-    /* ===========================
-       3. AUTH UI
-       =========================== */
+    /* AUTH */
     function updateAuthUI() {
       if (isAuthorized) {
         addSkuBtn.disabled = false;
-        authStatus.textContent = 'Unlocked: you can add new SKUs and remove them from the Browse tab.';
+        authStatus.textContent =
+          'Unlocked: you can add new SKUs (session only) and remove them from the Browse tab.';
         authStatus.classList.add('ok');
         authStatus.classList.remove('error');
       } else {
         addSkuBtn.disabled = true;
-        authStatus.textContent = 'Enter password HF-HPA to enable add and remove actions.';
+        authStatus.textContent = 'Enter password HF-HPA to enable add and remove actions (session only).';
         authStatus.classList.remove('ok');
         authStatus.classList.remove('error');
       }
@@ -751,9 +713,7 @@
       }
     });
 
-    /* ===========================
-       4. TABS
-       =========================== */
+    /* TABS */
     tabs.forEach(btn => {
       btn.addEventListener('click', () => {
         tabs.forEach(b => b.classList.remove('active'));
@@ -769,9 +729,7 @@
       });
     });
 
-    /* ===========================
-       5. RENDER SKUs
-       =========================== */
+    /* RENDER SKUs */
     function createCard(item, index) {
       const card = document.createElement('article');
       card.className = 'sku-card';
@@ -805,18 +763,16 @@
       card.appendChild(skuLine);
       card.appendChild(meta);
 
-      // remove only if authorized
       if (isAuthorized) {
         const removeBtn = document.createElement('button');
         removeBtn.type = 'button';
         removeBtn.className = 'btn btn-small btn-remove';
-        removeBtn.innerHTML = '<span class="icon">🗑️</span> Remove';
+        removeBtn.innerHTML = '<span class="icon">🗑️</span> Remove (session only)';
         removeBtn.addEventListener('click', (e) => {
           e.stopPropagation();
-          const confirmDelete = confirm(`Remove SKU "${item.name}" from this session and saved list?`);
+          const confirmDelete = confirm(`Remove SKU "${item.name}" from this session?`);
           if (confirmDelete) {
             skuData.splice(index, 1);
-            saveToStorage();
             renderList();
           }
         });
@@ -856,9 +812,7 @@
       emptyState.style.display = filteredWithIndex.length === 0 ? 'block' : 'none';
     }
 
-    /* ===========================
-       6. ADD SKU
-       =========================== */
+    /* ADD SKU (session only) */
     addSkuBtn.addEventListener('click', () => {
       if (!isAuthorized) {
         alert('Enter the admin password (HF-HPA) to add SKUs.');
@@ -882,18 +836,14 @@
         sentIn: sent
       });
 
-      // Clear inputs (keep year so you can add multiple SKUs for the same year)
       addName.value = '';
       addSku.value = '';
       addSentIn.value = '';
 
-      saveToStorage();
       renderList();
     });
 
-    /* ===========================
-       7. EXPORT CSV
-       =========================== */
+    /* EXPORT CSV (for replacing on GitHub) */
     function exportCsv() {
       if (!skuData.length) {
         alert('No SKUs to export yet. Add at least one SKU first.');
@@ -918,7 +868,7 @@
 
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'sku-data-2022-2026-updated.csv';
+      a.download = 'SKU_Name_2026_UPDATED.csv';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -927,82 +877,63 @@
 
     downloadCsvBtn.addEventListener('click', exportCsv);
 
-    /* ===========================
-       8. IMPORT CSV
-       =========================== */
-    importCsvBtn.addEventListener('click', () => {
-      if (!isAuthorized) {
-        alert('Enter the admin password (HF-HPA) to import SKUs.');
-        return;
-      }
-      importFile.click();
+    /* FILTER EVENTS + RESET */
+    nameFilter.addEventListener('input', renderList);
+    skuFilter.addEventListener('input', renderList);
+    sentInFilter.addEventListener('input', renderList);
+    yearFilter.addEventListener('change', renderList);
+
+    resetBtn.addEventListener('click', () => {
+      nameFilter.value = '';
+      skuFilter.value = '';
+      sentInFilter.value = '';
+      yearFilter.value = 'all';
+      renderList();
     });
 
-    importFile.addEventListener('change', (event) => {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const text = e.target.result;
-          const lines = text.split(/\r?\n/).filter(line => line.trim().length > 0);
-          if (lines.length < 2) {
-            alert('CSV file appears to be empty or missing data.');
-            return;
-          }
-
-          const header = lines[0].split(',').map(h => h.trim().toLowerCase());
-          const yearIdx = header.indexOf('year sent');
-          const nameIdx = header.indexOf('sku name');
-          const skuIdx = header.indexOf('sku');
-          const sentIdx = header.indexOf('sent in');
-
-          if (yearIdx === -1 || nameIdx === -1 || skuIdx === -1 || sentIdx === -1) {
-            alert('CSV header must include: Year Sent, SKU Name, SKU, Sent In.');
-            return;
-          }
-
-          const imported = [];
-
-          for (let i = 1; i < lines.length; i++) {
-            const row = parseCsvLine(lines[i]);
-            if (!row.length) continue;
-
-            const item = {
-              yearSent: (row[yearIdx] || '').trim(),
-              name: (row[nameIdx] || '').trim(),
-              sku: (row[skuIdx] || '').trim(),
-              sentIn: (row[sentIdx] || '').trim()
-            };
-
-            if (!item.name || !item.sku) continue;
-            imported.push(item);
-          }
-
-          if (!imported.length) {
-            alert('No valid SKUs found in CSV.');
-            return;
-          }
-
-          const replace = confirm('Import will replace the current list of SKUs in this browser. Continue?');
-          if (!replace) return;
-
-          skuData = imported;
-          saveToStorage();
-          renderList();
-          alert(`Imported ${imported.length} SKUs from CSV.`);
-        } catch (err) {
-          console.error(err);
-          alert('Error importing CSV. Make sure the format is correct.');
-        } finally {
-          importFile.value = '';
+    /* LOAD CSV FROM GITHUB PAGES */
+    async function loadCsv() {
+      try {
+        const response = await fetch(CSV_URL);
+        if (!response.ok) {
+          throw new Error('Failed to load CSV from GitHub Pages');
         }
-      };
-      reader.readAsText(file);
-    });
+        const text = await response.text();
+        skuData = parseCsv(text);
+        renderList();
+      } catch (err) {
+        console.error(err);
+        alert('Error loading shared CSV. Check that SKU_Name_2026.csv is in your GitHub repo and GitHub Pages is enabled.');
+      }
+    }
 
-    // simple CSV line parser (handles quoted values with commas)
+    function parseCsv(text) {
+      const lines = text.split(/\r?\n/).filter(line => line.trim().length > 0);
+      if (lines.length < 2) return [];
+
+      const header = lines[0].split(',').map(h => h.trim().toLowerCase());
+      const yearIdx = header.indexOf('year sent');
+      const nameIdx = header.indexOf('sku name');
+      const skuIdx = header.indexOf('sku');
+      const sentIdx = header.indexOf('sent in');
+
+      const data = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        const row = parseCsvLine(lines[i]);
+        if (!row.length) continue;
+        const item = {
+          yearSent: yearIdx >= 0 ? (row[yearIdx] || '').trim() : '',
+          name: nameIdx >= 0 ? (row[nameIdx] || '').trim() : '',
+          sku: skuIdx >= 0 ? (row[skuIdx] || '').trim() : '',
+          sentIn: sentIdx >= 0 ? (row[sentIdx] || '').trim() : ''
+        };
+        if (!item.name || !item.sku) continue;
+        data.push(item);
+      }
+      return data;
+    }
+
     function parseCsvLine(line) {
       const result = [];
       let current = '';
@@ -1010,7 +941,6 @@
 
       for (let i = 0; i < line.length; i++) {
         const char = line[i];
-
         if (char === '"') {
           if (inQuotes && line[i + 1] === '"') {
             current += '"';
@@ -1029,38 +959,10 @@
       return result;
     }
 
-    /* ===========================
-       9. FILTER EVENTS + RESET + CLEAR ALL
-       =========================== */
-    nameFilter.addEventListener('input', renderList);
-    skuFilter.addEventListener('input', renderList);
-    sentInFilter.addEventListener('input', renderList);
-    yearFilter.addEventListener('change', renderList);
-
-    resetBtn.addEventListener('click', () => {
-      nameFilter.value = '';
-      skuFilter.value = '';
-      sentInFilter.value = '';
-      yearFilter.value = 'all';
-      renderList();
+    window.addEventListener('DOMContentLoaded', () => {
+      updateAuthUI();
+      loadCsv();
     });
-
-    clearAllBtn.addEventListener('click', () => {
-      const ok = confirm('This will remove ALL saved SKUs from this browser. Continue?');
-      if (!ok) return;
-      skuData = [];
-      try {
-        localStorage.removeItem(STORAGE_KEY);
-      } catch (e) {
-        console.error('Error clearing localStorage', e);
-      }
-      renderList();
-    });
-
-    // Initial load + setup
-    loadFromStorage();
-    updateAuthUI();
-    renderList();
   </script>
 </body>
 </html>
