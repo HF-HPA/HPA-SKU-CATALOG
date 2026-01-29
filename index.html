@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>HPA SKU Catalog (Inline Data)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #0b1720;
+      --bg-alt: #111f2b;
+      --card-bg: #152433;
+      --accent: #61dafb;
+      --accent-soft: rgba(97, 218, 251, 0.15);
+      --text: #f7fbff;
+      --muted: #a6b4c4;
+      --border-subtle: #233546;
+      --danger: #ff7676;
+      --success: #6ee7b7;
+      --radius-lg: 14px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.45);
+      --shadow-pill: 0 4px 15px rgba(0, 0, 0, 0.35);
+      --transition-fast: 0.18s ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #12283a 0, #050b10 52%, #020509 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .app-shell {
+      width: 100%;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* HEADER */
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .title-block h1 {
+      font-size: 1.4rem;
+      font-weight: 650;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pill {
+      font-size: 0.7rem;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid rgba(97, 218, 251, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .subtitle {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .btn {
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-subtle);
+      background: rgba(20, 35, 50, 0.85);
+      color: var(--text);
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: var(--shadow-pill);
+      transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent) 0%, #4b9fff 45%, #7b61ff 100%);
+      color: #021018;
+      border: none;
+    }
+
+    .btn span.icon {
+      font-size: 1rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+    }
+
+    .btn-small {
+      padding: 4px 9px;
+      font-size: 0.75rem;
+    }
+
+    .btn-remove {
+      border-color: rgba(248, 113, 113, 0.7);
+      color: #fecaca;
+      background: rgba(30, 64, 74, 0.4);
+    }
+
+    .btn-remove:hover {
+      background: rgba(220, 38, 38, 0.3);
+      border-color: rgba(248, 113, 113, 1);
+      color: #fee2e2;
+    }
+
+    .btn-secondary {
+      border-color: rgba(148, 163, 184, 0.8);
+      color: #e5e7eb;
+      background: rgba(15, 23, 42, 0.6);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(30, 64, 175, 0.4);
+      border-color: rgba(129, 140, 248, 0.9);
+    }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      gap: 6px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-top: 4px;
+    }
+
+    .tab {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      border-radius: 999px 999px 0 0;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .tab.active {
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text);
+      border-color: var(--border-subtle);
+      border-bottom-color: rgba(15, 23, 42, 0.95);
+    }
+
+    .tab:not(.active):hover {
+      background: rgba(15, 23, 42, 0.6);
+      color: #e5e7eb;
+    }
+
+    .tab-content {
+      margin-top: 8px;
+    }
+
+    /* FILTER BAR (Browse tab) */
+    .controls {
+      background: linear-gradient(135deg, rgba(21, 37, 54, 0.95), rgba(7, 27, 44, 0.98));
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      padding: 12px;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    @media (min-width: 900px) {
+      .controls {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+    }
+
+    .search-wrapper {
+      flex: 2;
+      position: relative;
+      min-width: 220px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 10px 34px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-subtle);
+      background: rgba(5, 16, 26, 0.9);
+      color: var(--text);
+      font-size: 0.9rem;
+      outline: none;
+      box-shadow: var(--shadow-pill);
+    }
+
+    .search-input::placeholder {
+      color: #62758a;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1rem;
+      color: #62758a;
+    }
+
+    .filters {
+      flex: 3;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 130px;
+    }
+
+    .filter-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #7c8ea3;
+    }
+
+    .text-filter,
+    select {
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-subtle);
+      padding: 6px 12px;
+      background: rgba(10, 21, 32, 0.9);
+      color: var(--text);
+      font-size: 0.8rem;
+      outline: none;
+    }
+
+    select {
+      appearance: none;
+      padding-right: 28px;
+      background-image: linear-gradient(45deg, transparent 50%, #7c8ea3 50%),
+        linear-gradient(135deg, #7c8ea3 50%, transparent 50%);
+      background-position: calc(100% - 12px) 9px, calc(100% - 7px) 9px;
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+    }
+
+    /* MANAGE TAB */
+    .add-sku {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(12, 20, 37, 0.98));
+      border-radius: var(--radius-lg);
+      border: 1px dashed var(--border-subtle);
+      padding: 12px;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .add-sku-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .add-sku-title span {
+      font-size: 1rem;
+    }
+
+    .admin-auth {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+      padding: 8px;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .admin-auth-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .admin-auth-input {
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-subtle);
+      padding: 6px 10px;
+      background: rgba(10, 21, 32, 0.9);
+      color: var(--text);
+      font-size: 0.8rem;
+      outline: none;
+      min-width: 160px;
+    }
+
+    .auth-status {
+      font-size: 0.75rem;
+      color: #9ca3af;
+    }
+
+    .auth-status.ok {
+      color: #bbf7d0;
+    }
+
+    .auth-status.error {
+      color: #fecaca;
+    }
+
+    .add-sku-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    @media (min-width: 720px) {
+      .add-sku-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    .add-sku-field {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .add-sku-label {
+      font-size: 0.75rem;
+      color: #9ca3af;
+    }
+
+    .add-sku-input {
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-subtle);
+      padding: 6px 10px;
+      background: rgba(10, 21, 32, 0.9);
+      color: var(--text);
+      font-size: 0.8rem;
+      outline: none;
+    }
+
+    .add-sku-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    /* RESULTS */
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      padding: 0 2px;
+    }
+
+    .results-header strong {
+      color: var(--text);
+    }
+
+    .sku-grid {
+      margin-top: 4px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    @media (min-width: 640px) {
+      .sku-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1080px) {
+      .sku-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .sku-card {
+      background: radial-gradient(circle at top left, #203447 0, #0c1722 55%, #050b10 100%);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .sku-card:hover {
+      transform: translateY(-1px);
+      border-color: rgba(96, 165, 250, 0.6);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7);
+    }
+
+    .sku-year-pill {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 0.6rem;
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      color: #e2e8f0;
+    }
+
+    .sku-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-right: 60px;
+    }
+
+    .sku-sku {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .sku-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .sku-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .empty-state {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: var(--radius-lg);
+      border: 1px dashed var(--border-subtle);
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #importFile {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <main class="app-shell">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-left">
+        <div class="title-block">
+          <h1>
+            HPA SKU Catalog
+            <span class="pill">Inline Data</span>
+          </h1>
+          <p class="subtitle">
+            Browse SKUs, then switch to Manage tab (password required) to add/remove. Data is saved in this browser,
+            and you can import/export CSV to share across devices.
+          </p>
+        </div>
+      </div>
+      <div class="quick-actions">
+        <button id="resetBtn" class="btn btn-primary" type="button">
+          <span class="icon">🔄</span>
+          Reset filters
+        </button>
+        <button id="clearAllBtn" class="btn btn-secondary" type="button">
+          <span class="icon">🧹</span>
+          Clear saved SKUs
+        </button>
+      </div>
+    </header>
+
+    <!-- TABS -->
+    <nav class="tabs">
+      <button class="tab active" data-tab="browse">Browse SKUs</button>
+      <button class="tab" data-tab="manage">Manage SKUs</button>
+    </nav>
+
+    <!-- BROWSE TAB -->
+    <section id="tab-browse" class="tab-content">
+      <!-- FILTERS -->
+      <section class="controls">
+        <!-- SKU NAME (main filter) -->
+        <div class="search-wrapper">
+          <span class="search-icon">🔎</span>
+          <input
+            id="nameFilter"
+            class="search-input"
+            type="search"
+            placeholder="Filter by SKU name…"
+          />
+        </div>
+
+        <!-- Other filters -->
+        <div class="filters">
+          <div class="filter-group">
+            <span class="filter-label">SKU</span>
+            <input id="skuFilter" class="text-filter" type="search" placeholder="e.g. 1005-837-400" />
+          </div>
+
+          <div class="filter-group">
+            <span class="filter-label">Sent In</span>
+            <input id="sentInFilter" class="text-filter" type="search" placeholder="e.g. 6 or Promo" />
+          </div>
+
+          <div class="filter-group">
+            <span class="filter-label">Year Sent</span>
+            <select id="yearFilter">
+              <option value="all">All years</option>
+              <option value="2022">2022</option>
+              <option value="2023">2023</option>
+              <option value="2024">2024</option>
+              <option value="2025">2025</option>
+              <option value="2026">2026</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESULTS HEADER -->
+      <div class="results-header">
+        <div><strong id="resultCount">0</strong> SKUs shown</div>
+        <div>Tap a card for a quick overview of Sent In & Year Sent.</div>
+      </div>
+
+      <!-- SKU GRID -->
+      <section id="skuGrid" class="sku-grid">
+        <!-- Cards injected by JavaScript -->
+      </section>
+
+      <div id="emptyState" class="empty-state" style="display:none;">
+        No SKUs match your filters. Try clearing one or more fields, or add a new SKU in the Manage tab.
+      </div>
+    </section>
+
+    <!-- MANAGE TAB -->
+    <section id="tab-manage" class="tab-content hidden">
+      <section class="add-sku">
+        <div class="add-sku-title">
+          <span>🛠️</span> Manage SKUs (Password Required)
+        </div>
+        <div class="admin-auth">
+          <div class="admin-auth-row">
+            <input
+              id="adminPassword"
+              class="admin-auth-input"
+              type="password"
+              placeholder="Enter admin password"
+            />
+            <button id="unlockBtn" class="btn btn-small btn-secondary" type="button">
+              <span class="icon">🔓</span> Unlock
+            </button>
+          </div>
+          <div id="authStatus" class="auth-status">
+            Enter password <strong>HF-HPA</strong> to enable add and remove actions.
+          </div>
+        </div>
+
+        <p style="font-size:0.75rem;color:var(--muted);margin-top:4px;">
+          Once unlocked, you can add SKUs below and remove them from the Browse tab. Use Import/Export CSV to sync between devices.
+        </p>
+
+        <div class="add-sku-grid">
+          <div class="add-sku-field">
+            <label for="addYear" class="add-sku-label">Year Sent</label>
+            <input id="addYear" class="add-sku-input" type="text" placeholder="e.g. 2026" />
+          </div>
+          <div class="add-sku-field">
+            <label for="addName" class="add-sku-label">SKU Name</label>
+            <input id="addName" class="add-sku-input" type="text" placeholder='e.g. 6" New Variety' />
+          </div>
+          <div class="add-sku-field">
+            <label for="addSku" class="add-sku-label">SKU</label>
+            <input id="addSku" class="add-sku-input" type="text" placeholder="e.g. 1234-567-890" />
+          </div>
+          <div class="add-sku-field">
+            <label for="addSentIn" class="add-sku-label">Sent In</label>
+            <input id="addSentIn" class="add-sku-input" type="text" placeholder='e.g. "6" or "Promo"' />
+          </div>
+        </div>
+        <div class="add-sku-actions">
+          <button id="addSkuBtn" class="btn btn-primary btn-small" type="button" disabled>
+            <span class="icon">✅</span> Add SKU to List
+          </button>
+          <button id="downloadCsvBtn" class="btn btn-small" type="button">
+            <span class="icon">⬇️</span> Download CSV
+          </button>
+          <button id="importCsvBtn" class="btn btn-small btn-secondary" type="button">
+            <span class="icon">📥</span> Import CSV
+          </button>
+          <input id="importFile" type="file" accept=".csv" />
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    /* ===========================
+       1. DATA & STORAGE
+       =========================== */
+    let skuData = []; // all SKUs user-added
+    const STORAGE_KEY = 'hpaSkuData_v3';
+    const PASSWORD = 'HF-HPA';
+    let isAuthorized = false;
+
+    function loadFromStorage() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+          skuData = parsed;
+        }
+      } catch (e) {
+        console.error('Error loading from localStorage', e);
+      }
+    }
+
+    function saveToStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(skuData));
+      } catch (e) {
+        console.error('Error saving to localStorage', e);
+      }
+    }
+
+    /* ===========================
+       2. UI HANDLES
+       =========================== */
+    const nameFilter = document.getElementById('nameFilter');
+    const skuFilter = document.getElementById('skuFilter');
+    const sentInFilter = document.getElementById('sentInFilter');
+    const yearFilter = document.getElementById('yearFilter');
+    const skuGrid = document.getElementById('skuGrid');
+    const resultCount = document.getElementById('resultCount');
+    const emptyState = document.getElementById('emptyState');
+    const resetBtn = document.getElementById('resetBtn');
+    const clearAllBtn = document.getElementById('clearAllBtn');
+
+    const addYear = document.getElementById('addYear');
+    const addName = document.getElementById('addName');
+    const addSku = document.getElementById('addSku');
+    const addSentIn = document.getElementById('addSentIn');
+    const addSkuBtn = document.getElementById('addSkuBtn');
+    const downloadCsvBtn = document.getElementById('downloadCsvBtn');
+    const importCsvBtn = document.getElementById('importCsvBtn');
+    const importFile = document.getElementById('importFile');
+
+    const adminPassword = document.getElementById('adminPassword');
+    const unlockBtn = document.getElementById('unlockBtn');
+    const authStatus = document.getElementById('authStatus');
+
+    const tabs = document.querySelectorAll('.tab');
+    const tabBrowse = document.getElementById('tab-browse');
+    const tabManage = document.getElementById('tab-manage');
+
+    /* ===========================
+       3. AUTH UI
+       =========================== */
+    function updateAuthUI() {
+      if (isAuthorized) {
+        addSkuBtn.disabled = false;
+        authStatus.textContent = 'Unlocked: you can add new SKUs and remove them from the Browse tab.';
+        authStatus.classList.add('ok');
+        authStatus.classList.remove('error');
+      } else {
+        addSkuBtn.disabled = true;
+        authStatus.textContent = 'Enter password HF-HPA to enable add and remove actions.';
+        authStatus.classList.remove('ok');
+        authStatus.classList.remove('error');
+      }
+    }
+
+    unlockBtn.addEventListener('click', () => {
+      const val = adminPassword.value.trim();
+      if (val === PASSWORD) {
+        isAuthorized = true;
+        adminPassword.value = '';
+        updateAuthUI();
+        renderList();
+      } else {
+        isAuthorized = false;
+        authStatus.textContent = 'Incorrect password. Try again.';
+        authStatus.classList.add('error');
+        addSkuBtn.disabled = true;
+      }
+    });
+
+    /* ===========================
+       4. TABS
+       =========================== */
+    tabs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabs.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const t = btn.dataset.tab;
+        if (t === 'browse') {
+          tabBrowse.classList.remove('hidden');
+          tabManage.classList.add('hidden');
+        } else {
+          tabManage.classList.remove('hidden');
+          tabBrowse.classList.add('hidden');
+        }
+      });
+    });
+
+    /* ===========================
+       5. RENDER SKUs
+       =========================== */
+    function createCard(item, index) {
+      const card = document.createElement('article');
+      card.className = 'sku-card';
+
+      const yearPill = document.createElement('div');
+      yearPill.className = 'sku-year-pill';
+      yearPill.textContent = item.yearSent || '—';
+
+      const name = document.createElement('h2');
+      name.className = 'sku-name';
+      name.textContent = item.name;
+
+      const skuLine = document.createElement('div');
+      skuLine.className = 'sku-sku';
+      skuLine.textContent = `SKU: ${item.sku}`;
+
+      const meta = document.createElement('div');
+      meta.className = 'sku-meta';
+
+      const sentSpan = document.createElement('span');
+      sentSpan.innerHTML = '<span class="dot"></span>Sent In: ' + (item.sentIn || '—');
+
+      const yearSpan = document.createElement('span');
+      yearSpan.textContent = 'Year Sent: ' + (item.yearSent || '—');
+
+      meta.appendChild(sentSpan);
+      meta.appendChild(yearSpan);
+
+      card.appendChild(yearPill);
+      card.appendChild(name);
+      card.appendChild(skuLine);
+      card.appendChild(meta);
+
+      // remove only if authorized
+      if (isAuthorized) {
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'btn btn-small btn-remove';
+        removeBtn.innerHTML = '<span class="icon">🗑️</span> Remove';
+        removeBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const confirmDelete = confirm(`Remove SKU "${item.name}" from this session and saved list?`);
+          if (confirmDelete) {
+            skuData.splice(index, 1);
+            saveToStorage();
+            renderList();
+          }
+        });
+        card.appendChild(removeBtn);
+      }
+
+      card.addEventListener('click', () => {
+        alert(
+          `${item.name}\n\nSKU: ${item.sku}\nSent In: ${item.sentIn || '—'}\nYear Sent: ${item.yearSent || '—'}`
+        );
+      });
+
+      return card;
+    }
+
+    function renderList() {
+      skuGrid.innerHTML = '';
+
+      const nameQ = (nameFilter.value || '').toLowerCase();
+      const skuQ = (skuFilter.value || '').toLowerCase();
+      const sentQ = (sentInFilter.value || '').toLowerCase();
+      const yearQ = yearFilter.value;
+
+      const filteredWithIndex = skuData
+        .map((item, index) => ({ item, index }))
+        .filter(({ item }) => {
+          const matchesName = !nameQ || item.name.toLowerCase().includes(nameQ);
+          const matchesSku = !skuQ || item.sku.toLowerCase().includes(skuQ);
+          const matchesSent = !sentQ || (item.sentIn || '').toLowerCase().includes(sentQ);
+          const matchesYear = yearQ === 'all' || (item.yearSent && item.yearSent.toString() === yearQ);
+          return matchesName && matchesSku && matchesSent && matchesYear;
+        });
+
+      filteredWithIndex.forEach(({ item, index }) => skuGrid.appendChild(createCard(item, index)));
+
+      resultCount.textContent = filteredWithIndex.length;
+      emptyState.style.display = filteredWithIndex.length === 0 ? 'block' : 'none';
+    }
+
+    /* ===========================
+       6. ADD SKU
+       =========================== */
+    addSkuBtn.addEventListener('click', () => {
+      if (!isAuthorized) {
+        alert('Enter the admin password (HF-HPA) to add SKUs.');
+        return;
+      }
+
+      const year = addYear.value.trim();
+      const name = addName.value.trim();
+      const sku = addSku.value.trim();
+      const sent = addSentIn.value.trim();
+
+      if (!name || !sku) {
+        alert('Please enter at least SKU Name and SKU.');
+        return;
+      }
+
+      skuData.push({
+        yearSent: year,
+        name: name,
+        sku: sku,
+        sentIn: sent
+      });
+
+      // Clear inputs (keep year so you can add multiple SKUs for the same year)
+      addName.value = '';
+      addSku.value = '';
+      addSentIn.value = '';
+
+      saveToStorage();
+      renderList();
+    });
+
+    /* ===========================
+       7. EXPORT CSV
+       =========================== */
+    function exportCsv() {
+      if (!skuData.length) {
+        alert('No SKUs to export yet. Add at least one SKU first.');
+        return;
+      }
+
+      const headers = ['Year Sent', 'SKU Name', 'SKU', 'Sent In'];
+      const rows = skuData.map(item => [
+        item.yearSent || '',
+        item.name || '',
+        item.sku || '',
+        item.sentIn || ''
+      ]);
+
+      let csv = headers.join(',') + '\n';
+      csv += rows.map(r =>
+        r.map(val => `"${String(val).replace(/"/g, '""')}"`).join(',')
+      ).join('\n');
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'sku-data-2022-2026-updated.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    downloadCsvBtn.addEventListener('click', exportCsv);
+
+    /* ===========================
+       8. IMPORT CSV
+       =========================== */
+    importCsvBtn.addEventListener('click', () => {
+      if (!isAuthorized) {
+        alert('Enter the admin password (HF-HPA) to import SKUs.');
+        return;
+      }
+      importFile.click();
+    });
+
+    importFile.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const text = e.target.result;
+          const lines = text.split(/\r?\n/).filter(line => line.trim().length > 0);
+          if (lines.length < 2) {
+            alert('CSV file appears to be empty or missing data.');
+            return;
+          }
+
+          const header = lines[0].split(',').map(h => h.trim().toLowerCase());
+          const yearIdx = header.indexOf('year sent');
+          const nameIdx = header.indexOf('sku name');
+          const skuIdx = header.indexOf('sku');
+          const sentIdx = header.indexOf('sent in');
+
+          if (yearIdx === -1 || nameIdx === -1 || skuIdx === -1 || sentIdx === -1) {
+            alert('CSV header must include: Year Sent, SKU Name, SKU, Sent In.');
+            return;
+          }
+
+          const imported = [];
+
+          for (let i = 1; i < lines.length; i++) {
+            const row = parseCsvLine(lines[i]);
+            if (!row.length) continue;
+
+            const item = {
+              yearSent: (row[yearIdx] || '').trim(),
+              name: (row[nameIdx] || '').trim(),
+              sku: (row[skuIdx] || '').trim(),
+              sentIn: (row[sentIdx] || '').trim()
+            };
+
+            if (!item.name || !item.sku) continue;
+            imported.push(item);
+          }
+
+          if (!imported.length) {
+            alert('No valid SKUs found in CSV.');
+            return;
+          }
+
+          const replace = confirm('Import will replace the current list of SKUs in this browser. Continue?');
+          if (!replace) return;
+
+          skuData = imported;
+          saveToStorage();
+          renderList();
+          alert(`Imported ${imported.length} SKUs from CSV.`);
+        } catch (err) {
+          console.error(err);
+          alert('Error importing CSV. Make sure the format is correct.');
+        } finally {
+          importFile.value = '';
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    // simple CSV line parser (handles quoted values with commas)
+    function parseCsvLine(line) {
+      const result = [];
+      let current = '';
+      let inQuotes = false;
+
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+
+        if (char === '"') {
+          if (inQuotes && line[i + 1] === '"') {
+            current += '"';
+            i++;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (char === ',' && !inQuotes) {
+          result.push(current);
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      result.push(current);
+      return result;
+    }
+
+    /* ===========================
+       9. FILTER EVENTS + RESET + CLEAR ALL
+       =========================== */
+    nameFilter.addEventListener('input', renderList);
+    skuFilter.addEventListener('input', renderList);
+    sentInFilter.addEventListener('input', renderList);
+    yearFilter.addEventListener('change', renderList);
+
+    resetBtn.addEventListener('click', () => {
+      nameFilter.value = '';
+      skuFilter.value = '';
+      sentInFilter.value = '';
+      yearFilter.value = 'all';
+      renderList();
+    });
+
+    clearAllBtn.addEventListener('click', () => {
+      const ok = confirm('This will remove ALL saved SKUs from this browser. Continue?');
+      if (!ok) return;
+      skuData = [];
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch (e) {
+        console.error('Error clearing localStorage', e);
+      }
+      renderList();
+    });
+
+    // Initial load + setup
+    loadFromStorage();
+    updateAuthUI();
+    renderList();
+  </script>
+</body>
+</html>
