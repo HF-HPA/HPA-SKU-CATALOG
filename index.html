@@ -226,12 +226,12 @@
     <!-- HEADER -->
     <header class="header">
       <div class="title-block">
-        <h1>HF-HPA <span class="pill">Catalog</span></h1>
+        <h1>HF-HPA</h1>
         <p class="subtitle">Central hub for viewing Hampshire product SKUs.</p>
       </div>
     </header>
 
-    <!-- NEW TABS -->
+    <!-- TABS -->
     <nav class="tabs">
       <button class="tab active" data-tab="catalog">SKU Catalog</button>
       <button class="tab" data-tab="care">Plant Care Instructions</button>
@@ -245,19 +245,20 @@
         <div class="search-wrapper">
           <span class="search-icon">🔍</span>
           <input id="nameFilter" class="search-input" type="text"
-                 placeholder="Filter by SKU name..."/>
+                 placeholder="Filter by SKU name..." />
         </div>
 
         <div class="filters">
-
           <div class="filter-group">
             <span class="filter-label">SKU</span>
-            <input id="skuFilter" class="filter-input" type="text" placeholder="e.g. 1005-837-400"/>
+            <input id="skuFilter" class="filter-input" type="text"
+                   placeholder="e.g. 1005-837-400" />
           </div>
 
           <div class="filter-group">
             <span class="filter-label">Sent In</span>
-            <input id="sentInFilter" class="filter-input" type="text" placeholder="e.g. 6 or Promo"/>
+            <input id="sentInFilter" class="filter-input" type="text"
+                   placeholder="e.g. 6 or Promo" />
           </div>
 
           <div class="filter-group">
@@ -271,7 +272,6 @@
               <option>2026</option>
             </select>
           </div>
-
         </div>
       </section>
 
@@ -284,10 +284,9 @@
       <div id="emptyState" class="empty-state hidden">
         No SKUs match your filters.
       </div>
-
     </section>
 
-    <!-- TAB: PLANT CARE -->
+    <!-- TAB: PLANT CARE INSTRUCTIONS -->
     <section id="tab-care" class="tab-content hidden">
       <div class="under-construction">
         This section is under construction, check back on Spring Kick Off 2026.
@@ -307,19 +306,21 @@
   <div id="popupBackdrop" class="popup-backdrop">
     <div class="popup">
       <h2 id="popupName"></h2>
+      <p><strong>SKU Name:</strong> <span id="popupNameLabel"></span></p>
       <p><strong>SKU:</strong> <span id="popupSku"></span></p>
       <p><strong>Sent In:</strong> <span id="popupSent"></span></p>
       <p><strong>Year Sent:</strong> <span id="popupYear"></span></p>
       <button id="popupClose" class="popup-close">Close</button>
     </div>
   </div>
-  <script>
+<script>
+  // 1. CSV source (change this if you change the CSV file name or repo)
   const CSV_URL =
-    "https://hf-hpa.github.io/HPA-SKU-CATALOG/SKU_Name_2026.csv";
+    "https://hf-hpa.github.io/HPA-SKU-CATALOGUE/SKU_Name_2026.csv";
 
   let skuData = [];
 
-  // Tab logic
+  // 2. Tab logic
   const tabs = document.querySelectorAll(".tab");
   const tabSections = {
     catalog: document.getElementById("tab-catalog"),
@@ -339,7 +340,7 @@
     });
   });
 
-  // Filters
+  // 3. Filters
   const nameFilter = document.getElementById("nameFilter");
   const skuFilter = document.getElementById("skuFilter");
   const sentInFilter = document.getElementById("sentInFilter");
@@ -348,9 +349,10 @@
   const resultCount = document.getElementById("resultCount");
   const emptyState = document.getElementById("emptyState");
 
-  // Popup
+  // 4. Popup
   const popupBackdrop = document.getElementById("popupBackdrop");
   const popupName = document.getElementById("popupName");
+  const popupNameLabel = document.getElementById("popupNameLabel");
   const popupSku = document.getElementById("popupSku");
   const popupSent = document.getElementById("popupSent");
   const popupYear = document.getElementById("popupYear");
@@ -364,10 +366,12 @@
     if (e.target === popupBackdrop) popupBackdrop.style.display = "none";
   });
 
+  // 5. CSV parsing helpers
   function parseCsvLine(line) {
     const result = [];
     let current = "";
     let inQuotes = false;
+
     for (let i = 0; i < line.length; i++) {
       const ch = line[i];
       if (ch === '"') {
@@ -392,7 +396,7 @@
     const lines = text.split(/\r?\n/).filter((l) => l.trim());
     if (lines.length < 2) return [];
 
-    const header = lines[0].split(",").map((s) => s.toLowerCase().trim());
+    const header = lines[0].split(",").map((h) => h.toLowerCase().trim());
     const yearIdx = header.indexOf("year sent");
     const nameIdx = header.indexOf("sku name");
     const skuIdx = header.indexOf("sku");
@@ -404,68 +408,75 @@
       const row = parseCsvLine(lines[i]);
       if (!row.length) continue;
 
-      data.push({
-        yearSent: row[yearIdx] || "",
-        name: row[nameIdx] || "",
-        sku: row[skuIdx] || "",
-        sentIn: row[sentIdx] || "",
-      });
+      const item = {
+        yearSent: yearIdx >= 0 ? (row[yearIdx] || "").trim() : "",
+        name: nameIdx >= 0 ? (row[nameIdx] || "").trim() : "",
+        sku: skuIdx >= 0 ? (row[skuIdx] || "").trim() : "",
+        sentIn: sentIdx >= 0 ? (row[sentIdx] || "").trim() : "",
+      };
+
+      if (item.name && item.sku) data.push(item);
     }
+
     return data;
   }
 
+  // 6. Card renderer – show only the 4 fields you care about
   function createCard(item) {
     const card = document.createElement("div");
     card.className = "sku-card";
 
     const pill = document.createElement("div");
     pill.className = "sku-year-pill";
-    pill.textContent = item.yearSent;
+    pill.textContent = item.yearSent || "—";
 
     const name = document.createElement("div");
     name.className = "sku-name";
-    name.textContent = item.name;
+    name.textContent = item.name || "(No name)";
 
-    const sku = document.createElement("div");
-    sku.className = "sku-sku";
-    sku.textContent = "SKU: " + item.sku;
-
-    const sent = document.createElement("div");
-    sent.className = "sku-meta";
-    sent.textContent = "Sent In: " + item.sentIn;
+    const meta = document.createElement("div");
+    meta.className = "sku-meta";
+    meta.innerHTML = `
+      <div><strong>SKU:</strong> ${item.sku || "—"}</div>
+      <div><strong>Sent In:</strong> ${item.sentIn || "—"}</div>
+      <div><strong>Year Sent:</strong> ${item.yearSent || "—"}</div>
+    `;
 
     card.appendChild(pill);
     card.appendChild(name);
-    card.appendChild(sku);
-    card.appendChild(sent);
+    card.appendChild(meta);
 
     card.addEventListener("click", () => {
-      popupName.textContent = item.name;
-      popupSku.textContent = item.sku;
-      popupSent.textContent = item.sentIn;
-      popupYear.textContent = item.yearSent;
+      popupName.textContent = item.name || "(No name)";
+      popupNameLabel.textContent = item.name || "(No name)";
+      popupSku.textContent = item.sku || "—";
+      popupSent.textContent = item.sentIn || "—";
+      popupYear.textContent = item.yearSent || "—";
       popupBackdrop.style.display = "flex";
     });
 
     return card;
   }
 
+  // 7. Apply filters + render
   function renderList() {
     skuGrid.innerHTML = "";
+
     const nameQ = nameFilter.value.toLowerCase();
     const skuQ = skuFilter.value.toLowerCase();
     const sentQ = sentInFilter.value.toLowerCase();
     const yearQ = yearFilter.value;
 
-    const filtered = skuData.filter(
-      (item) =>
+    const filtered = skuData.filter((item) => {
+      return (
         (!nameQ || item.name.toLowerCase().includes(nameQ)) &&
         (!skuQ || item.sku.toLowerCase().includes(skuQ)) &&
         (!sentQ || item.sentIn.toLowerCase().includes(sentQ)) &&
         (yearQ === "all" || item.yearSent === yearQ)
-    );
+      );
+    });
 
-    filtered.forEach((i) => skuGrid.appendChild(createCard(i)));
+    filtered.forEach((item) => skuGrid.appendChild(createCard(item)));
 
     resultCount.textContent = filtered.length;
     emptyState.classList.toggle("hidden", filtered.length !== 0);
@@ -476,6 +487,7 @@
   sentInFilter.addEventListener("input", renderList);
   yearFilter.addEventListener("change", renderList);
 
+  // 8. Load CSV from GitHub
   async function loadCsv() {
     try {
       const res = await fetch(CSV_URL);
@@ -483,7 +495,8 @@
       skuData = parseCsv(text);
       renderList();
     } catch (err) {
-      alert("Error loading shared CSV. Ensure SKU_Name_2026.csv is in your GitHub repo.");
+      console.error(err);
+      alert("Error loading shared CSV. Make sure SKU_Name_2026.csv exists in your GitHub repo.");
     }
   }
 
