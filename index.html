@@ -6,6 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
+
+  logo {
+    width: 40px;         
+    height: 40px;
+    border-radius: 50%; 
+    object-fit: cover;
+    }
+
+    
     :root {
       --bg: #0b1720;
       --bg-alt: #111f2b;
@@ -223,17 +232,17 @@
   <main class="app-shell">
 
     <!-- HEADER -->    
+
 <header class="header">
   <div style="display: flex; align-items: center; gap: 12px;">
-    <img src="https://hf-hpa.github.io/HPA-SKU-CATALOGUE/hf_logo.jpg"
-         alt="HF Logo"
-         style="width: 55px; height: 55px; border-radius: 50%; object-fit: cover;">
+    <img src="hf_logo.jpg" alt="HF Logo" class="logo" />
     <div class="title-block">
       <h1>HF-HPA</h1>
       <p class="subtitle">Central hub for viewing HF-HPA info.</p>
     </div>
   </div>
 </header>
+
 
 
     <!-- TABS -->
@@ -509,6 +518,7 @@
 </script>
 </body>
 </html>
+
 
 
 
