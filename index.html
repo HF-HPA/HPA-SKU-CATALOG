@@ -471,28 +471,36 @@
   }
 
   // 7. Apply filters + render
-  function renderList() {
-    skuGrid.innerHTML = "";
+function renderList() {
+  skuGrid.innerHTML = "";
 
-    const nameQ = nameFilter.value.toLowerCase();
-    const skuQ = skuFilter.value.toLowerCase();
-    const sentQ = sentInFilter.value.toLowerCase();
-    const yearQ = yearFilter.value;
+  // Get filter values
+  const nameQ = (nameFilter.value || "").toLowerCase();
+  const skuQNorm = normalizeSku(skuFilter.value || "");
+  const sentQ = (sentInFilter.value || "").toLowerCase();
+  const yearQ = yearFilter.value;
 
-    const filtered = skuData.filter((item) => {
-      return (
-        (!nameQ || item.name.toLowerCase().includes(nameQ)) &&
-        (!skuQ || item.sku.toLowerCase().includes(skuQ)) &&
-        (!sentQ || item.sentIn.toLowerCase().includes(sentQ)) &&
-        (yearQ === "all" || item.yearSent === yearQ)
-      );
-    });
+  const filtered = skuData.filter((item) => {
+    const itemName = (item.name || "").toLowerCase();
+    const itemSkuNorm = normalizeSku(item.sku || "");
+    const itemSent = (item.sentIn || "").toLowerCase();
+    const itemYear = item.yearSent ? item.yearSent.toString() : "";
 
-    filtered.forEach((item) => skuGrid.appendChild(createCard(item)));
+    const matchesName = !nameQ || itemName.includes(nameQ);
+    const matchesSku = !skuQNorm || itemSkuNorm.includes(skuQNorm);
+    const matchesSent = !sentQ || itemSent.includes(sentQ);
+    const matchesYear = yearQ === "all" || itemYear === yearQ;
 
-    resultCount.textContent = filtered.length;
-    emptyState.classList.toggle("hidden", filtered.length !== 0);
-  }
+    return matchesName && matchesSku && matchesSent && matchesYear;
+  });
+
+  filtered.forEach((item) => {
+    skuGrid.appendChild(createCard(item));
+  });
+
+  resultCount.textContent = filtered.length;
+  emptyState.classList.toggle("hidden", filtered.length !== 0);
+}
 
   nameFilter.addEventListener("input", renderList);
   skuFilter.addEventListener("input", renderList);
@@ -516,6 +524,7 @@
 </script>
 </body>
 </html>
+
 
 
 
