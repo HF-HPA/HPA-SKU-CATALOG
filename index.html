@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title> HF-HPA </title>
+  <title>HF-HPA</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
@@ -21,11 +22,7 @@
       --transition-fast: 0.18s ease-out;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: system-ui, sans-serif;
@@ -59,21 +56,38 @@
       gap: 8px;
     }
 
-    .subtitle {
-      font-size: 0.85rem;
+    .subtitle { color: var(--muted); font-size: .9rem; }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      gap: 6px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-top: 10px;
+    }
+
+    .tab {
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      border-radius: 8px 8px 0 0;
+      background: rgba(255,255,255,0.05);
+      cursor: pointer;
       color: var(--muted);
+      border: 1px solid transparent;
     }
 
-    .pill {
-      font-size: 0.7rem;
-      padding: 3px 9px;
-      border-radius: var(--radius-pill);
-      background: var(--accent-soft);
-      color: var(--accent);
-      border: 1px solid rgba(97, 218, 251, 0.5);
+    .tab.active {
+      background: rgba(255,255,255,0.15);
+      color: var(--text);
+      border-color: var(--border-subtle);
+      border-bottom-color: rgba(255,255,255,0.15);
     }
 
-    /* FILTER CONTROL WRAPPER */
+    .tab:hover { background: rgba(255,255,255,0.1); }
+
+    .tab-content { margin-top: 14px; }
+
+    /* FILTER BAR */
     .controls {
       background: rgba(21, 37, 54, 0.95);
       border-radius: var(--radius-lg);
@@ -85,16 +99,10 @@
     }
 
     @media (min-width: 900px) {
-      .controls {
-        flex-direction: row;
-        align-items: center;
-      }
+      .controls { flex-direction: row; align-items: center; }
     }
 
-    .search-wrapper {
-      flex: 2;
-      position: relative;
-    }
+    .search-wrapper { flex: 2; position: relative; }
 
     .search-input {
       width: 100%;
@@ -103,7 +111,6 @@
       border: 1px solid var(--border-subtle);
       background: rgba(5, 16, 26, 0.9);
       color: var(--text);
-      font-size: 0.9rem;
     }
 
     .search-icon {
@@ -111,30 +118,14 @@
       left: 10px;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 1rem;
       color: #62758a;
     }
 
-    .filters {
-      flex: 3;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-    }
+    .filters { flex: 3; display: flex; flex-wrap: wrap; gap: 8px; }
 
-    .filter-group {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      min-width: 140px;
-    }
+    .filter-group { display: flex; flex-direction: column; min-width: 140px; }
 
-    .filter-label {
-      color: var(--muted);
-      font-size: 0.75rem;
-      letter-spacing: 0.08em;
-    }
+    .filter-label { color: var(--muted); font-size: .75rem; }
 
     .filter-input {
       border-radius: var(--radius-pill);
@@ -144,100 +135,48 @@
       color: var(--text);
     }
 
-    select.filter-input {
-      appearance: none;
-      background-image: linear-gradient(45deg, transparent 50%, #7c8ea3 50%),
-        linear-gradient(135deg, #7c8ea3 50%, transparent 50%);
-      background-position: calc(100% - 14px) 10px, calc(100% - 8px) 10px;
-      background-size: 6px 6px;
-      background-repeat: no-repeat;
-    }
-
-    /* RESULTS HEADER */
-    .results-header {
-      display: flex;
-      justify-content: space-between;
-      color: var(--muted);
-      font-size: 0.8rem;
-    }
-
-    .results-header strong {
-      color: var(--text);
-    }
-
-    /* GRID OF CARDS */
+    /* GRID */
     .sku-grid {
       display: grid;
       gap: 12px;
-      margin-top: 8px;
       grid-template-columns: 1fr;
     }
 
     @media (min-width: 600px) {
-      .sku-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+      .sku-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
     @media (min-width: 1000px) {
-      .sku-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
+      .sku-grid { grid-template-columns: repeat(3, 1fr); }
     }
 
+    /* CARDS */
     .sku-card {
       background: radial-gradient(circle at top left, #203447 0, #0c1722 60%, #050b10);
       border-radius: var(--radius-lg);
-      padding: 14px;
       border: 1px solid var(--border-subtle);
+      padding: 14px;
       cursor: pointer;
-      transition: 0.2s;
       position: relative;
+      transition: 0.2s;
     }
 
-    .sku-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--accent);
-    }
+    .sku-card:hover { transform: translateY(-2px); border-color: var(--accent); }
 
     .sku-year-pill {
       position: absolute;
       top: 10px;
       right: 10px;
       background: rgba(15, 23, 42, 0.9);
-      padding: 3px 10px;
-      font-size: 0.7rem;
+      padding: 4px 8px;
       border-radius: var(--radius-pill);
-      border: 1px solid #6b7b8c;
-      color: #d0d7df;
+      border: 1px solid var(--muted);
+      font-size: .75rem;
     }
 
-    .sku-name {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .sku-sku {
-      color: var(--muted);
-      font-size: 0.8rem;
-    }
-
-    .sku-meta {
-      margin-top: 6px;
-      color: #9bb3ca;
-      font-size: 0.75rem;
-    }
-
-    .empty-state {
-      margin-top: 20px;
-      padding: 20px;
-      text-align: center;
-      color: var(--muted);
-      border: 1px dashed var(--border-subtle);
-      border-radius: var(--radius-lg);
-      background: rgba(15, 23, 42, 0.6);
-    }
+    .sku-name { font-size: 1rem; font-weight: 600; }
+    .sku-sku { color: var(--muted); font-size: .85rem; margin-top: 4px; }
+    .sku-meta { color: #9bb3ca; font-size: .8rem; margin-top: 6px; }
 
     /* POPUP */
     .popup-backdrop {
@@ -245,32 +184,40 @@
       inset: 0;
       background: rgba(0,0,0,0.7);
       display: none;
-      align-items: center;
       justify-content: center;
+      align-items: center;
     }
 
     .popup {
       background: #14232f;
       padding: 20px;
-      border-radius: 14px;
       width: 90%;
       max-width: 400px;
+      border-radius: 14px;
       border: 1px solid var(--accent);
     }
 
-    .popup h2 {
-      margin-bottom: 10px;
-      font-size: 1.2rem;
-    }
-
     .popup-close {
-      margin-top: 12px;
-      background: var(--accent);
+      margin-top: 14px;
+      padding: 10px 14px;
       border: none;
-      padding: 8px 12px;
       border-radius: var(--radius-pill);
+      background: var(--accent);
       cursor: pointer;
     }
+
+    /* UNDER CONSTRUCTION PAGES */
+    .under-construction {
+      padding: 40px;
+      text-align: center;
+      font-size: 1rem;
+      color: var(--muted);
+      border: 1px dashed var(--border-subtle);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .hidden { display: none; }
   </style>
 </head>
 <body>
@@ -279,55 +226,81 @@
     <!-- HEADER -->
     <header class="header">
       <div class="title-block">
-        <h1>HPA SKU Catalog <span class="pill">Read‑Only</span></h1>
-        <p class="subtitle">View SKUs loaded from a shared company CSV file.</p>
+        <h1>HF-HPA <span class="pill">Catalog</span></h1>
+        <p class="subtitle">Central hub for viewing Hampshire product SKUs.</p>
       </div>
     </header>
 
-    <!-- FILTER BAR -->
-    <section class="controls">
-      <div class="search-wrapper">
-        <span class="search-icon">🔍</span>
-        <input id="nameFilter" class="search-input" type="text"
-               placeholder="Filter by SKU name…" />
+    <!-- NEW TABS -->
+    <nav class="tabs">
+      <button class="tab active" data-tab="catalog">SKU Catalog</button>
+      <button class="tab" data-tab="care">Plant Care Instructions</button>
+      <button class="tab" data-tab="orders">Order Requests</button>
+    </nav>
+
+    <!-- TAB: CATALOG -->
+    <section id="tab-catalog" class="tab-content">
+
+      <section class="controls">
+        <div class="search-wrapper">
+          <span class="search-icon">🔍</span>
+          <input id="nameFilter" class="search-input" type="text"
+                 placeholder="Filter by SKU name..."/>
+        </div>
+
+        <div class="filters">
+
+          <div class="filter-group">
+            <span class="filter-label">SKU</span>
+            <input id="skuFilter" class="filter-input" type="text" placeholder="e.g. 1005-837-400"/>
+          </div>
+
+          <div class="filter-group">
+            <span class="filter-label">Sent In</span>
+            <input id="sentInFilter" class="filter-input" type="text" placeholder="e.g. 6 or Promo"/>
+          </div>
+
+          <div class="filter-group">
+            <span class="filter-label">Year Sent</span>
+            <select id="yearFilter" class="filter-input">
+              <option value="all">All</option>
+              <option>2022</option>
+              <option>2023</option>
+              <option>2024</option>
+              <option>2025</option>
+              <option>2026</option>
+            </select>
+          </div>
+
+        </div>
+      </section>
+
+      <div class="results-header">
+        <strong id="resultCount">0</strong> SKUs shown
       </div>
 
-      <div class="filters">
-        <div class="filter-group">
-          <span class="filter-label">SKU</span>
-          <input id="skuFilter" class="filter-input" type="text"
-                 placeholder="e.g. 1005-837-400" />
-        </div>
+      <section id="skuGrid" class="sku-grid"></section>
 
-        <div class="filter-group">
-          <span class="filter-label">Sent In</span>
-          <input id="sentInFilter" class="filter-input" type="text"
-                 placeholder="e.g. 6 or Promo" />
-        </div>
+      <div id="emptyState" class="empty-state hidden">
+        No SKUs match your filters.
+      </div>
 
-        <div class="filter-group">
-          <span class="filter-label">Year Sent</span>
-          <select id="yearFilter" class="filter-input">
-            <option value="all">All Years</option>
-            <option>2025</option>
-            <option>2026</option>
-          </select>
-        </div>
+    </section>
+
+    <!-- TAB: PLANT CARE -->
+    <section id="tab-care" class="tab-content hidden">
+      <div class="under-construction">
+        This section is under construction, check back on Spring Kick Off 2026.
       </div>
     </section>
 
-    <!-- RESULTS HEADER -->
-    <div class="results-header">
-      <div><strong id="resultCount">0</strong> SKUs shown</div>
-      <div>Click a card to view details.</div>
-    </div>
+    <!-- TAB: ORDER REQUESTS -->
+    <section id="tab-orders" class="tab-content hidden">
+      <div class="under-construction">
+        This section is under construction, check back on Spring Kick Off 2026.
+      </div>
+    </section>
 
-    <!-- SKU GRID -->
-    <section id="skuGrid" class="sku-grid"></section>
-
-    <div id="emptyState" class="empty-state" style="display:none;">
-      No SKUs found. Adjust your filters.
-    </div>
   </main>
 
   <!-- POPUP -->
@@ -337,7 +310,7 @@
       <p><strong>SKU:</strong> <span id="popupSku"></span></p>
       <p><strong>Sent In:</strong> <span id="popupSent"></span></p>
       <p><strong>Year Sent:</strong> <span id="popupYear"></span></p>
-      <button class="popup-close" id="popupClose">Close</button>
+      <button id="popupClose" class="popup-close">Close</button>
     </div>
   </div>
   <script>
@@ -346,6 +319,27 @@
 
   let skuData = [];
 
+  // Tab logic
+  const tabs = document.querySelectorAll(".tab");
+  const tabSections = {
+    catalog: document.getElementById("tab-catalog"),
+    care: document.getElementById("tab-care"),
+    orders: document.getElementById("tab-orders"),
+  };
+
+  tabs.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      tabs.forEach((t) => t.classList.remove("active"));
+      btn.classList.add("active");
+
+      const show = btn.dataset.tab;
+      Object.keys(tabSections).forEach((k) => {
+        tabSections[k].classList.toggle("hidden", k !== show);
+      });
+    });
+  });
+
+  // Filters
   const nameFilter = document.getElementById("nameFilter");
   const skuFilter = document.getElementById("skuFilter");
   const sentInFilter = document.getElementById("sentInFilter");
@@ -354,6 +348,7 @@
   const resultCount = document.getElementById("resultCount");
   const emptyState = document.getElementById("emptyState");
 
+  // Popup
   const popupBackdrop = document.getElementById("popupBackdrop");
   const popupName = document.getElementById("popupName");
   const popupSku = document.getElementById("popupSku");
@@ -361,25 +356,32 @@
   const popupYear = document.getElementById("popupYear");
   const popupClose = document.getElementById("popupClose");
 
+  popupClose.addEventListener("click", () => {
+    popupBackdrop.style.display = "none";
+  });
+
+  popupBackdrop.addEventListener("click", (e) => {
+    if (e.target === popupBackdrop) popupBackdrop.style.display = "none";
+  });
+
   function parseCsvLine(line) {
     const result = [];
     let current = "";
     let inQuotes = false;
-
     for (let i = 0; i < line.length; i++) {
-      const char = line[i];
-      if (char === '"') {
+      const ch = line[i];
+      if (ch === '"') {
         if (inQuotes && line[i + 1] === '"') {
           current += '"';
           i++;
         } else {
           inQuotes = !inQuotes;
         }
-      } else if (char === "," && !inQuotes) {
+      } else if (ch === "," && !inQuotes) {
         result.push(current);
         current = "";
       } else {
-        current += char;
+        current += ch;
       }
     }
     result.push(current);
@@ -387,10 +389,10 @@
   }
 
   function parseCsv(text) {
-    const lines = text.split(/\r?\n/).filter((l) => l.trim() !== "");
+    const lines = text.split(/\r?\n/).filter((l) => l.trim());
     if (lines.length < 2) return [];
 
-    const header = lines[0].split(",").map((h) => h.trim().toLowerCase());
+    const header = lines[0].split(",").map((s) => s.toLowerCase().trim());
     const yearIdx = header.indexOf("year sent");
     const nameIdx = header.indexOf("sku name");
     const skuIdx = header.indexOf("sku");
@@ -402,16 +404,13 @@
       const row = parseCsvLine(lines[i]);
       if (!row.length) continue;
 
-      const item = {
+      data.push({
         yearSent: row[yearIdx] || "",
         name: row[nameIdx] || "",
         sku: row[skuIdx] || "",
         sentIn: row[sentIdx] || "",
-      };
-
-      if (item.name && item.sku) data.push(item);
+      });
     }
-
     return data;
   }
 
@@ -431,14 +430,14 @@
     sku.className = "sku-sku";
     sku.textContent = "SKU: " + item.sku;
 
-    const meta = document.createElement("div");
-    meta.className = "sku-meta";
-    meta.textContent = "Sent In: " + item.sentIn;
+    const sent = document.createElement("div");
+    sent.className = "sku-meta";
+    sent.textContent = "Sent In: " + item.sentIn;
 
     card.appendChild(pill);
     card.appendChild(name);
     card.appendChild(sku);
-    card.appendChild(meta);
+    card.appendChild(sent);
 
     card.addEventListener("click", () => {
       popupName.textContent = item.name;
@@ -451,37 +450,25 @@
     return card;
   }
 
-  popupClose.addEventListener("click", () => {
-    popupBackdrop.style.display = "none";
-  });
-
-  popupBackdrop.addEventListener("click", (e) => {
-    if (e.target === popupBackdrop) popupBackdrop.style.display = "none";
-  });
-
   function renderList() {
     skuGrid.innerHTML = "";
-
     const nameQ = nameFilter.value.toLowerCase();
     const skuQ = skuFilter.value.toLowerCase();
     const sentQ = sentInFilter.value.toLowerCase();
     const yearQ = yearFilter.value;
 
-    const filtered = skuData.filter((item) => {
-      return (
+    const filtered = skuData.filter(
+      (item) =>
         (!nameQ || item.name.toLowerCase().includes(nameQ)) &&
         (!skuQ || item.sku.toLowerCase().includes(skuQ)) &&
         (!sentQ || item.sentIn.toLowerCase().includes(sentQ)) &&
         (yearQ === "all" || item.yearSent === yearQ)
-      );
-    });
+    );
 
-    filtered.forEach((item) => {
-      skuGrid.appendChild(createCard(item));
-    });
+    filtered.forEach((i) => skuGrid.appendChild(createCard(i)));
 
     resultCount.textContent = filtered.length;
-    emptyState.style.display = filtered.length ? "none" : "block";
+    emptyState.classList.toggle("hidden", filtered.length !== 0);
   }
 
   nameFilter.addEventListener("input", renderList);
@@ -496,7 +483,7 @@
       skuData = parseCsv(text);
       renderList();
     } catch (err) {
-      alert("Error loading CSV. Check that SKU_Name_2026.csv is in your GitHub repo.");
+      alert("Error loading shared CSV. Ensure SKU_Name_2026.csv is in your GitHub repo.");
     }
   }
 
@@ -504,7 +491,3 @@
 </script>
 </body>
 </html>
-
-
-
-
