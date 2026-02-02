@@ -1,9 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>HF-HPA</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Favicon (requires hf_logo.png in your repo root) -->
+  <!-- Favicon (website icon) -->
   hpa_logo.png
 
   <style>
@@ -29,8 +31,8 @@
     }
 
     body {
-      font-family: system-ui, sans-serif;
-      background: radial-gradient(circle at top, #12283a, #050b10);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #12283a 0, #050b10 52%, #020509 100%);
       color: var(--text);
       min-height: 100vh;
     }
@@ -48,6 +50,8 @@
       display: flex;
       align-items: center;
       gap: 16px;
+      flex-wrap: wrap;
+      justify-content: flex-start;
     }
 
     .header-left {
@@ -66,6 +70,7 @@
     .title-block {
       display: flex;
       flex-direction: column;
+      gap: 3px;
     }
 
     .title-block h1 {
@@ -84,6 +89,7 @@
       gap: 6px;
       border-bottom: 1px solid var(--border-subtle);
       margin-top: 10px;
+      flex-wrap: wrap;
     }
 
     .tab {
@@ -94,7 +100,7 @@
       border: 1px solid transparent;
       color: var(--muted);
       cursor: pointer;
-      transition: 0.2s;
+      transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
     }
 
     .tab.active {
@@ -104,7 +110,7 @@
       color: var(--text);
     }
 
-    .tab:hover {
+    .tab:not(.active):hover {
       background: rgba(255,255,255,0.1);
       color: var(--text);
     }
@@ -113,7 +119,7 @@
       margin-top: 14px;
     }
 
-    /* SKU FILTER AREA */
+    /* SKU FILTER AREA (SKU Catalogue tab) */
     .controls {
       background: rgba(21,37,54,0.95);
       border-radius: var(--radius-lg);
@@ -122,6 +128,7 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
+      box-shadow: var(--shadow-soft);
     }
 
     @media (min-width: 900px) {
@@ -143,6 +150,11 @@
       border: 1px solid var(--border-subtle);
       background: rgba(5,16,26,0.9);
       color: var(--text);
+      font-size: 0.9rem;
+    }
+
+    .search-input::placeholder {
+      color: #62758a;
     }
 
     .search-icon {
@@ -178,13 +190,14 @@
       background: rgba(10,21,32,0.9);
       padding: 6px 10px;
       color: var(--text);
+      font-size: 0.8rem;
     }
 
     /* SKU RESULTS */
     .results-header {
       display: flex;
       justify-content: space-between;
-      margin-top: 4px;
+      margin-top: 6px;
       color: var(--muted);
       font-size: 0.8rem;
     }
@@ -213,12 +226,14 @@
     }
 
     .sku-card {
+      position: relative;
       background: radial-gradient(circle at top left, #203447 0, #0c1722 60%, #050b10);
       border-radius: var(--radius-lg);
       border: 1px solid var(--border-subtle);
       padding: 14px;
       cursor: pointer;
       transition: 0.2s;
+      box-shadow: var(--shadow-soft);
     }
 
     .sku-card:hover {
@@ -230,11 +245,12 @@
       position: absolute;
       top: 10px;
       right: 10px;
-      background: rgba(15,23,42,0.9);
-      border: 1px solid #6b7b8c;
+      background: rgba(15,23,42,0.95);
       border-radius: var(--radius-pill);
+      border: 1px solid #64748b;
       padding: 3px 8px;
       font-size: 0.7rem;
+      color: #e2e8f0;
     }
 
     .sku-name {
@@ -245,29 +261,18 @@
 
     .sku-meta {
       font-size: 0.8rem;
-      color: #c1d0e0;
-      line-height: 1.3;
+      color: #cbd5e1;
+      line-height: 1.4;
     }
 
     .empty-state {
       padding: 20px;
       margin-top: 16px;
-      background: rgba(15,23,42,0.7);
-      border-radius: var(--radius-lg);
       text-align: center;
-      border: 1px dashed var(--border-subtle);
       color: var(--muted);
-    }
-
-    /* UNDER CONSTRUCTION SECTIONS */
-    .under-construction {
-      margin-top: 24px;
-      padding: 24px;
       background: rgba(15,23,42,0.7);
       border-radius: var(--radius-lg);
       border: 1px dashed var(--border-subtle);
-      text-align: center;
-      color: var(--muted);
     }
 
     /* ORDER BREAKDOWN */
@@ -346,6 +351,17 @@
       color: var(--text);
     }
 
+    /* UNDER CONSTRUCTION (Plant Care tab) */
+    .under-construction {
+      margin-top: 24px;
+      padding: 24px;
+      background: rgba(15,23,42,0.7);
+      border-radius: var(--radius-lg);
+      border: 1px dashed var(--border-subtle);
+      text-align: center;
+      color: var(--muted);
+    }
+
     /* POPUP */
     .popup-backdrop {
       position: fixed;
@@ -360,32 +376,53 @@
     .popup {
       background: #14232f;
       padding: 20px;
-      border: 1px solid var(--accent);
       border-radius: var(--radius-lg);
-      max-width: 420px;
+      border: 1px solid var(--accent);
       width: 90%;
+      max-width: 420px;
+    }
+
+    .popup h2 {
+      margin-bottom: 8px;
     }
 
     .popup-close {
+      margin-top: 12px;
       background: var(--accent);
       border: none;
-      padding: 8px 14px;
       border-radius: var(--radius-pill);
-      margin-top: 14px;
+      padding: 8px 14px;
       cursor: pointer;
     }
 
-    .hidden { display: none; }
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
-    <!-- TABS -->
+<body>
+  <main class="app-shell">
+
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-left">
+        <!-- Logo: requires hf_logo.png in repo root -->
+        hf_logo.png
+        <div class="title-block">
+          <h1>HF-HPA</h1>
+          <p class="subtitle">Central hub for viewing Hampshire product SKUs.</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- TABS: 1) SKU Catalogue 2) Order Breakdown 3) Plant Care Guide -->
     <nav class="tabs">
       <button class="tab active" data-tab="catalog">SKU Catalogue</button>
-      <button class="tab" data-tab="care">Order Breakdown</button>
-      <button class="tab" data-tab="orders">Plant Care Guide</button>
+      <button class="tab" data-tab="orders">Order Breakdown</button>
+      <button class="tab" data-tab="care">Plant Care Guide</button>
     </nav>
 
-    <!-- TAB: CATALOG -->
+    <!-- TAB: SKU CATALOGUE -->
     <section id="tab-catalog" class="tab-content">
       <section class="controls">
         <div class="search-wrapper">
@@ -423,6 +460,9 @@
             <span class="filter-label">Year Sent</span>
             <select id="yearFilter" class="filter-input">
               <option value="all">All</option>
+              <option>2022</option>
+              <option>2023</option>
+              <option>2024</option>
               <option>2025</option>
               <option>2026</option>
             </select>
@@ -432,7 +472,7 @@
 
       <div class="results-header">
         <div><strong id="resultCount">0</strong> SKUs shown</div>
-        <div>Click a card to view more details.</div>
+        <div>Click a card to view SKU details.</div>
       </div>
 
       <section id="skuGrid" class="sku-grid"></section>
@@ -442,66 +482,58 @@
       </div>
     </section>
 
-<!-- TAB: ORDER BREAKDOWN -->
-<section id="tab-orders" class="tab-content hidden">
-  <div class="order-breakdown-wrapper">
-    
-    <!-- Top header boxes -->
-    <div class="ob-header-stack">
-      <!-- Week box -->
-      <div class="ob-week-box">
-        <!-- You can change this text each week -->
-        Week #: <span id="obWeekDisplay">TBD</span>
-      </div>
-      <!-- Store grades box -->
-      <div class="ob-grades-box">
-        Store Grades that are shipping: <span id="obGradesDisplay">FLO, FOL, FHB, TRP, UCO, SPC</span>
-      </div>
-    </div>
+    <!-- TAB: ORDER BREAKDOWN -->
+    <section id="tab-orders" class="tab-content hidden">
+      <div class="order-breakdown-wrapper">
+        <!-- Header boxes -->
+        <div class="ob-header-stack">
+          <div class="ob-week-box">
+            Shipping Week #: <span id="obWeekDisplay">TBD</span>
+          </div>
+          <div class="ob-grades-box">
+            Store Grades that are shipping: <span id="obGradesDisplay">FLO, FOL, FHB, TRP, UCO, SPC</span>
+          </div>
+        </div>
 
-    <!-- 6 shipping category boxes -->
-    <div class="ob-grid">
-      <div class="ob-box">
-        <div class="ob-box-title">FLO</div>
-        <div class="ob-box-body" id="obFloBody">
-          <!-- Example content:
-          6" Seasonal Ceramic
-          SKU: 1011-165-461
-          Sent In: Week 6
-          Year Sent: 2026
-          -->
+        <!-- Category boxes -->
+        <div class="ob-grid">
+          <div class="ob-box">
+            <div class="ob-box-title">FLO</div>
+            <div class="ob-box-body" id="obFloBody">
+              <!-- Example:
+              6" Seasonal Ceramic — SKU: 1011-165-461 — Sent In: 6 — Year Sent: 2026
+              -->
+            </div>
+          </div>
+
+          <div class="ob-box">
+            <div class="ob-box-title">FOL</div>
+            <div class="ob-box-body" id="obFolBody"></div>
+          </div>
+
+          <div class="ob-box">
+            <div class="ob-box-title">UCO</div>
+            <div class="ob-box-body" id="obUcoBody"></div>
+          </div>
+
+          <div class="ob-box">
+            <div class="ob-box-title">FHB</div>
+            <div class="ob-box-body" id="obFhbBody"></div>
+          </div>
+
+          <div class="ob-box">
+            <div class="ob-box-title">TRP</div>
+            <div class="ob-box-body" id="obTrpBody"></div>
+          </div>
+
+          <div class="ob-box">
+            <div class="ob-box-title">SPC</div>
+            <div class="ob-box-body" id="obSpcBody"></div>
+          </div>
         </div>
       </div>
+    </section>
 
-      <div class="ob-box">
-        <div class="ob-box-title">FOL</div>
-        <div class="ob-box-body" id="obFolBody"></div>
-      </div>
-
-      <div class="ob-box">
-        <div class="ob-box-title">UCO</div>
-        <div class="ob-box-body" id="obUcoBody"></div>
-      </div>
-
-      <div class="ob-box">
-        <div class="ob-box-title">FHB</div>
-        <div class="ob-box-body" id="obFhbBody"></div>
-      </div>
-
-      <div class="ob-box">
-        <div class="ob-box-title">TRP</div>
-        <div class="ob-box-body" id="obTrpBody"></div>
-      </div>
-
-      <div class="ob-box">
-        <div class="ob-box-title">SPC</div>
-        <div class="ob-box-body" id="obSpcBody"></div>
-      </div>
-    </div>
-
-  </div>
-</section>
-    
     <!-- TAB: PLANT CARE GUIDE -->
     <section id="tab-care" class="tab-content hidden">
       <div class="under-construction">
@@ -511,7 +543,7 @@
 
   </main>
 
-  <!-- POPUP -->
+  <!-- POPUP FOR SKU DETAILS -->
   <div id="popupBackdrop" class="popup-backdrop">
     <div class="popup">
       <h2 id="popupName"></h2>
@@ -521,35 +553,23 @@
       <button id="popupClose" class="popup-close">Close</button>
     </div>
   </div>
-<script>
-  // Example: set week and store grades in one place
-  const CURRENT_WEEK = "6"; // change this as you go
-  const CURRENT_GRADES = "FLO, FOL, FHB, TRP, UCO, SPC";
 
-  document.addEventListener("DOMContentLoaded", () => {
-    const wk = document.getElementById("obWeekDisplay");
-    const gr = document.getElementById("obGradesDisplay");
-    if (wk) wk.textContent = CURRENT_WEEK;
-    if (gr) gr.textContent = CURRENT_GRADES;
-  });
-</script>
   <script>
-    // ========= CONFIG =========
-    // Use a relative URL so it just looks in the same folder as index.html
-    const CSV_URL = "SKU_Name_2026.csv";
+    // ========== CONFIG ==========
+    const CSV_URL = "SKU_Name_2026.csv"; // must be in same folder as index.html
 
     let skuData = [];
 
-    // ========= TAB LOGIC =========
+    // Tab elements
     const tabs = document.querySelectorAll(".tab");
     const tabCatalog = document.getElementById("tab-catalog");
-    const tabCare = document.getElementById("tab-care");
     const tabOrders = document.getElementById("tab-orders");
+    const tabCare = document.getElementById("tab-care");
 
     const tabSections = {
       catalog: tabCatalog,
-      care: tabCare,
-      orders: tabOrders
+      orders: tabOrders,
+      care: tabCare
     };
 
     tabs.forEach((btn) => {
@@ -564,7 +584,16 @@
       });
     });
 
-    // ========= FILTER + UI HANDLES =========
+    // Simple constants to control the week / grades text
+    const CURRENT_WEEK = "TBD"; // change this when needed
+    const CURRENT_GRADES = "FLO, FOL, FHB, TRP, UCO, SPC";
+
+    const obWeekDisplay = document.getElementById("obWeekDisplay");
+    const obGradesDisplay = document.getElementById("obGradesDisplay");
+    if (obWeekDisplay) obWeekDisplay.textContent = CURRENT_WEEK;
+    if (obGradesDisplay) obGradesDisplay.textContent = CURRENT_GRADES;
+
+    // ========== FILTER UI ==========
     const nameFilter = document.getElementById("nameFilter");
     const skuFilter = document.getElementById("skuFilter");
     const sentInFilter = document.getElementById("sentInFilter");
@@ -591,7 +620,7 @@
       }
     });
 
-    // ========= HELPERS =========
+    // ========== CSV HELPERS ==========
     function parseCsvLine(line) {
       const result = [];
       let current = "";
@@ -624,7 +653,7 @@
       const header = lines[0].split(",").map((h) => h.toLowerCase().trim());
       const yearIdx = header.indexOf("year sent");
       const nameIdx = header.indexOf("sku name");
-      const skuIdx = header.indexOf("sku");
+      const skuIdx  = header.indexOf("sku");
       const sentIdx = header.indexOf("sent in");
 
       const data = [];
@@ -635,9 +664,9 @@
 
         const item = {
           yearSent: yearIdx >= 0 ? (row[yearIdx] || "").trim() : "",
-          name:    nameIdx >= 0 ? (row[nameIdx] || "").trim()    : "",
-          sku:     skuIdx  >= 0 ? (row[skuIdx]  || "").trim()    : "",
-          sentIn:  sentIdx >= 0 ? (row[sentIdx] || "").trim()    : ""
+          name:     nameIdx >= 0 ? (row[nameIdx] || "").trim() : "",
+          sku:      skuIdx  >= 0 ? (row[skuIdx]  || "").trim() : "",
+          sentIn:   sentIdx >= 0 ? (row[sentIdx] || "").trim() : ""
         };
 
         if (item.name && item.sku) {
@@ -648,22 +677,22 @@
       return data;
     }
 
-    // Normalize SKUs so filter ignores dashes, spaces, etc.
+    // Normalize SKUs so we ignore dashes, spaces, etc.
     function normalizeSku(str) {
       return (str || "")
         .toString()
         .toLowerCase()
-        .replace(/[^0-9a-z]/g, ""); // Keep only letters & numbers
+        .replace(/[^0-9a-z]/g, "");
     }
 
-    // ========= RENDERING =========
+    // ========== RENDERING ==========
     function createCard(item) {
       const card = document.createElement("div");
       card.className = "sku-card";
 
-      const yearPill = document.createElement("div");
-      yearPill.className = "sku-year-pill";
-      yearPill.textContent = item.yearSent || "—";
+      const pill = document.createElement("div");
+      pill.className = "sku-year-pill";
+      pill.textContent = item.yearSent || "—";
 
       const name = document.createElement("div");
       name.className = "sku-name";
@@ -677,7 +706,7 @@
         <div><strong>Year Sent:</strong> ${item.yearSent || "—"}</div>
       `;
 
-      card.appendChild(yearPill);
+      card.appendChild(pill);
       card.appendChild(name);
       card.appendChild(meta);
 
@@ -720,7 +749,7 @@
       emptyState.classList.toggle("hidden", filtered.length !== 0);
     }
 
-    // ========= LOAD CSV & WIRE FILTERS =========
+    // ========== LOAD CSV ==========
     async function loadCsv() {
       try {
         const res = await fetch(CSV_URL);
@@ -739,15 +768,9 @@
     sentInFilter.addEventListener("input", renderList);
     yearFilter.addEventListener("change", renderList);
 
-    // Kick everything off
+    // Kick the whole thing off
     loadCsv();
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
+``
