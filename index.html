@@ -4,7 +4,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- Favicon (requires hf_logo.png in your repo root) -->
-  hf_logo.png
+  hpa_logo.png
 
   <style>
     :root {
@@ -521,7 +521,18 @@
       <button id="popupClose" class="popup-close">Close</button>
     </div>
   </div>
+<script>
+  // Example: set week and store grades in one place
+  const CURRENT_WEEK = "6"; // change this as you go
+  const CURRENT_GRADES = "FLO, FOL, FHB, TRP, UCO, SPC";
 
+  document.addEventListener("DOMContentLoaded", () => {
+    const wk = document.getElementById("obWeekDisplay");
+    const gr = document.getElementById("obGradesDisplay");
+    if (wk) wk.textContent = CURRENT_WEEK;
+    if (gr) gr.textContent = CURRENT_GRADES;
+  });
+</script>
   <script>
     // ========= CONFIG =========
     // Use a relative URL so it just looks in the same folder as index.html
@@ -733,6 +744,7 @@
   </script>
 </body>
 </html>
+
 
 
 
