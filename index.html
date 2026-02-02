@@ -5,6 +5,9 @@
   <title>HF-HPA</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+  <!-- Website icon (favicon) – requires hpa_logo.png in repo root -->
+  <link rel="icon" type="image/png" href="hpa_logo.png" />
+
   <style>
     :root {
       --bg: #0b1720;
@@ -21,11 +24,7 @@
       --transition-fast: 0.18s ease-out;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -48,7 +47,6 @@
       align-items: center;
       gap: 16px;
       flex-wrap: wrap;
-      justify-content: flex-start;
     }
 
     .header-left {
@@ -58,8 +56,8 @@
     }
 
     .logo {
-      width: 90px;
-      height: 90px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       object-fit: cover;
     }
@@ -81,28 +79,23 @@
     }
 
     /* TABS */
+    .tabs {
+      display: flex;
+      flex-direction: row;
+      gap: 6px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-top: 10px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding-bottom: 4px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
 
-.tabs {
-  display: flex;
-  flex-direction: row;
-  gap: 6px;
-  border-bottom: 1px solid var(--border-subtle);
-  margin-top: 10px;
-
-  /* NEW for mobile — keeps tabs on one line */
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  overflow-y: hidden;
-
-  padding-bottom: 4px;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;       /* Firefox hide scrollbar */
-}
-
-.tabs::-webkit-scrollbar {
-  display: none;               /* Chrome/Safari hide scrollbar */
-}
-
+    .tabs::-webkit-scrollbar {
+      display: none;
+    }
 
     .tab {
       padding: 8px 12px;
@@ -112,6 +105,7 @@
       border: 1px solid transparent;
       color: var(--muted);
       cursor: pointer;
+      white-space: nowrap;
       transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
     }
 
@@ -165,9 +159,7 @@
       font-size: 0.9rem;
     }
 
-    .search-input::placeholder {
-      color: #62758a;
-    }
+    .search-input::placeholder { color: #62758a; }
 
     .search-icon {
       position: absolute;
@@ -214,9 +206,7 @@
       font-size: 0.8rem;
     }
 
-    .results-header strong {
-      color: var(--text);
-    }
+    .results-header strong { color: var(--text); }
 
     .sku-grid {
       display: grid;
@@ -226,15 +216,11 @@
     }
 
     @media (min-width: 600px) {
-      .sku-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+      .sku-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
     @media (min-width: 1000px) {
-      .sku-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
+      .sku-grid { grid-template-columns: repeat(3, 1fr); }
     }
 
     .sku-card {
@@ -336,9 +322,7 @@
     }
 
     @media (min-width: 640px) {
-      .ob-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
+      .ob-grid { grid-template-columns: repeat(3, 1fr); }
     }
 
     .ob-box {
@@ -407,27 +391,25 @@
       cursor: pointer;
     }
 
-    .hidden {
-      display: none;
-    }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
   <main class="app-shell">
 
     <!-- HEADER -->
-    <header class="header">      
-    <div class="header-left">
-      <img src="hf_logo.png" class="logo" alt="HF Logo">
-      <div class="title-block">
-      <h1>HF-HPA</h1>
-      <p class="subtitle">Central Hub for HPA info</p>
-  </div>
-</div>
-
+    <header class="header">
+      <div class="header-left">
+        <!-- Header Logo – must have hf_logo.png in repo root -->
+        hf_logo.png
+        <div class="title-block">
+          <h1>HF-HPA</h1>
+          <p class="subtitle">Central Hub for HPA info.</p>
+        </div>
+      </div>
     </header>
 
-    <!-- TABS: 1) SKU Catalogue 2) Order Breakdown 3) Plant Care Guide -->
+    <!-- TABS: SKU Catalogue, Order Breakdown, Plant Care Guide -->
     <nav class="tabs">
       <button class="tab active" data-tab="catalog">SKU Catalogue</button>
       <button class="tab" data-tab="orders">Order Breakdown</button>
@@ -472,6 +454,9 @@
             <span class="filter-label">Year Sent</span>
             <select id="yearFilter" class="filter-input">
               <option value="all">All</option>
+              <option>2022</option>
+              <option>2023</option>
+              <option>2024</option>
               <option>2025</option>
               <option>2026</option>
             </select>
@@ -494,25 +479,19 @@
     <!-- TAB: ORDER BREAKDOWN -->
     <section id="tab-orders" class="tab-content hidden">
       <div class="order-breakdown-wrapper">
-        <!-- Header boxes -->
         <div class="ob-header-stack">
           <div class="ob-week-box">
-            Shipping Week #: <span id="obWeekDisplay">6</span>
+            Shipping Week #: <span id="obWeekDisplay">TBD</span>
           </div>
           <div class="ob-grades-box">
-            Store Grade Shipping: <span id="obGradesDisplay">ALL STORES</span>
+            Store Grade Shipping: <span id="obGradesDisplay">—</span>
           </div>
         </div>
 
-        <!-- Category boxes -->
         <div class="ob-grid">
           <div class="ob-box">
             <div class="ob-box-title">FLO</div>
-            <div class="ob-box-body" id="obFloBody">
-              <!-- Example:
-              6" Seasonal Ceramic — SKU: 1011-165-461 — Sent In: 6 — Year Sent: 2026
-              -->
-            </div>
+            <div class="ob-box-body" id="obFloBody"></div>
           </div>
 
           <div class="ob-box">
@@ -564,105 +543,68 @@
   </div>
 
   <script>
-    // ========== CONFIG ==========
-    const CSV_URL = "SKU_Name_2026.csv"; // must be in same folder as index.html
+    // ===== CONFIG =====
+    const SKU_CSV_URL   = "SKU_Name_2026.csv";   // main SKU list
+    const ORDER_CSV_URL = "OrderBreakdown.csv";  // order breakdown CSV
 
     let skuData = [];
+    let orderData = [];
 
-    // Tab elements
+    // Tabs
     const tabs = document.querySelectorAll(".tab");
     const tabCatalog = document.getElementById("tab-catalog");
-    const tabOrders = document.getElementById("tab-orders");
-    const tabCare = document.getElementById("tab-care");
+    const tabOrders  = document.getElementById("tab-orders");
+    const tabCare    = document.getElementById("tab-care");
 
-    const tabSections = {
-      catalog: tabCatalog,
-      orders: tabOrders,
-      care: tabCare
-    };
+    const tabSections = { catalog: tabCatalog, orders: tabOrders, care: tabCare };
 
-    tabs.forEach((btn) => {
+    tabs.forEach(btn => {
       btn.addEventListener("click", () => {
-        tabs.forEach((t) => t.classList.remove("active"));
+        tabs.forEach(t => t.classList.remove("active"));
         btn.classList.add("active");
-
         const show = btn.dataset.tab;
-        Object.keys(tabSections).forEach((key) => {
+        Object.keys(tabSections).forEach(key => {
           tabSections[key].classList.toggle("hidden", key !== show);
         });
       });
     });
 
-    // ===== ORDER BREAKDOWN CONFIG =====
-// Edit this object each week to change what shows in the Order Breakdown tab.
-const ORDER_BREAKDOWN = {
-  week: "6", // Shipping week number
-  grades: "All STORES",
-
-  FLO: [
-    // Each string here becomes a line in the FLO box
-    '6" Seasonal Ceramic — SKU: 1011-165-461 — Sent In: 6 — Year Sent: 2026',
-    '4" Holiday Ceramic — SKU: 1013-666-959 — Sent In: 6 — Year Sent: 2026'
-  ],
-
-  FOL: [
-    '6" Foliage in Daphne — SKU: 1006-939-475 — Sent In: 6 — Year Sent: 2026'
-  ],
-
-  UCO: [
-    'Example UCO item — SKU: 0000-000-000 — Sent In: 6 — Year Sent: 2026'
-  ],
-
-  FHB: [
-    // Add FHB items here
-  ],
-
-  TRP: [
-    // Add TRP items here
-  ],
-
-  SPC: [
-    // Add SPC items here
-  ]
-};
-    
-    // Simple constants to control the week / grades text
-    const CURRENT_WEEK = "TBD"; // change this when needed
-    const CURRENT_GRADES = "FLO, FOL, FHB, TRP, UCO, SPC";
-
-    const obWeekDisplay = document.getElementById("obWeekDisplay");
+    // ORDER BREAKDOWN DOM
+    const obWeekDisplay   = document.getElementById("obWeekDisplay");
     const obGradesDisplay = document.getElementById("obGradesDisplay");
-    if (obWeekDisplay) obWeekDisplay.textContent = CURRENT_WEEK;
-    if (obGradesDisplay) obGradesDisplay.textContent = CURRENT_GRADES;
+    const obBodies = {
+      FLO: document.getElementById("obFloBody"),
+      FOL: document.getElementById("obFolBody"),
+      UCO: document.getElementById("obUcoBody"),
+      FHB: document.getElementById("obFhbBody"),
+      TRP: document.getElementById("obTrpBody"),
+      SPC: document.getElementById("obSpcBody")
+    };
 
-    // ========== FILTER UI ==========
-    const nameFilter = document.getElementById("nameFilter");
-    const skuFilter = document.getElementById("skuFilter");
-    const sentInFilter = document.getElementById("sentInFilter");
-    const yearFilter = document.getElementById("yearFilter");
-    const skuGrid = document.getElementById("skuGrid");
-    const resultCount = document.getElementById("resultCount");
-    const emptyState = document.getElementById("emptyState");
+    // FILTER + POPUP DOM
+    const nameFilter    = document.getElementById("nameFilter");
+    const skuFilter     = document.getElementById("skuFilter");
+    const sentInFilter  = document.getElementById("sentInFilter");
+    const yearFilter    = document.getElementById("yearFilter");
+    const skuGrid       = document.getElementById("skuGrid");
+    const resultCount   = document.getElementById("resultCount");
+    const emptyState    = document.getElementById("emptyState");
 
-    // Popup
     const popupBackdrop = document.getElementById("popupBackdrop");
-    const popupName = document.getElementById("popupName");
-    const popupSku = document.getElementById("popupSku");
-    const popupSent = document.getElementById("popupSent");
-    const popupYear = document.getElementById("popupYear");
-    const popupClose = document.getElementById("popupClose");
+    const popupName     = document.getElementById("popupName");
+    const popupSku      = document.getElementById("popupSku");
+    const popupSent     = document.getElementById("popupSent");
+    const popupYear     = document.getElementById("popupYear");
+    const popupClose    = document.getElementById("popupClose");
 
     popupClose.addEventListener("click", () => {
       popupBackdrop.style.display = "none";
     });
-
     popupBackdrop.addEventListener("click", (e) => {
-      if (e.target === popupBackdrop) {
-        popupBackdrop.style.display = "none";
-      }
+      if (e.target === popupBackdrop) popupBackdrop.style.display = "none";
     });
 
-    // ========== CSV HELPERS ==========
+    // ===== CSV HELPERS =====
     function parseCsvLine(line) {
       const result = [];
       let current = "";
@@ -688,11 +630,11 @@ const ORDER_BREAKDOWN = {
       return result;
     }
 
-    function parseCsv(text) {
-      const lines = text.split(/\r?\n/).filter((l) => l.trim() !== "");
+    function parseSkuCsv(text) {
+      const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
       if (lines.length < 2) return [];
 
-      const header = lines[0].split(",").map((h) => h.toLowerCase().trim());
+      const header = lines[0].split(",").map(h => h.toLowerCase().trim());
       const yearIdx = header.indexOf("year sent");
       const nameIdx = header.indexOf("sku name");
       const skuIdx  = header.indexOf("sku");
@@ -703,15 +645,45 @@ const ORDER_BREAKDOWN = {
       for (let i = 1; i < lines.length; i++) {
         const row = parseCsvLine(lines[i]);
         if (!row.length) continue;
-
         const item = {
           yearSent: yearIdx >= 0 ? (row[yearIdx] || "").trim() : "",
           name:     nameIdx >= 0 ? (row[nameIdx] || "").trim() : "",
           sku:      skuIdx  >= 0 ? (row[skuIdx]  || "").trim() : "",
           sentIn:   sentIdx >= 0 ? (row[sentIdx] || "").trim() : ""
         };
+        if (item.name && item.sku) data.push(item);
+      }
+      return data;
+    }
 
-        if (item.name && item.sku) {
+    function parseOrderCsv(text) {
+      const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
+      if (lines.length < 2) return [];
+
+      const header = lines[0].split(",").map(h => h.toLowerCase().trim());
+      const weekIdx = header.indexOf("week");
+      const catIdx  = header.indexOf("category");
+      const nameIdx = header.indexOf("sku name");
+      const skuIdx  = header.indexOf("sku");
+      const sentIdx = header.indexOf("sent in");
+      const yearIdx = header.indexOf("year sent");
+
+      const data = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        const row = parseCsvLine(lines[i]);
+        if (!row.length) continue;
+
+        const item = {
+          week:     weekIdx >= 0 ? (row[weekIdx] || "").trim() : "",
+          category: catIdx  >= 0 ? (row[catIdx]  || "").trim().toUpperCase() : "",
+          name:     nameIdx >= 0 ? (row[nameIdx] || "").trim() : "",
+          sku:      skuIdx  >= 0 ? (row[skuIdx]  || "").trim() : "",
+          sentIn:   sentIdx >= 0 ? (row[sentIdx] || "").trim() : "",
+          yearSent: yearIdx >= 0 ? (row[yearIdx] || "").trim() : ""
+        };
+
+        if (item.week && item.category && item.sku) {
           data.push(item);
         }
       }
@@ -719,7 +691,7 @@ const ORDER_BREAKDOWN = {
       return data;
     }
 
-    // Normalize SKUs so we ignore dashes, spaces, etc.
+    // Normalize SKUs so filter ignores dashes/spaces
     function normalizeSku(str) {
       return (str || "")
         .toString()
@@ -727,7 +699,7 @@ const ORDER_BREAKDOWN = {
         .replace(/[^0-9a-z]/g, "");
     }
 
-    // ========== RENDERING ==========
+    // ===== SKU CATALOG RENDERING =====
     function createCard(item) {
       const card = document.createElement("div");
       card.className = "sku-card";
@@ -766,16 +738,16 @@ const ORDER_BREAKDOWN = {
     function renderList() {
       skuGrid.innerHTML = "";
 
-      const nameQ = (nameFilter.value || "").toLowerCase();
-      const skuQNorm = normalizeSku(skuFilter.value || "");
-      const sentQ = (sentInFilter.value || "").toLowerCase();
-      const yearQ = yearFilter.value;
+      const nameQ   = (nameFilter.value   || "").toLowerCase();
+      const skuQNorm= normalizeSku(skuFilter.value || "");
+      const sentQ   = (sentInFilter.value|| "").toLowerCase();
+      const yearQ   = yearFilter.value;
 
-      const filtered = skuData.filter((item) => {
-        const itemName = (item.name || "").toLowerCase();
-        const itemSkuNorm = normalizeSku(item.sku || "");
-        const itemSent = (item.sentIn || "").toLowerCase();
-        const itemYear = item.yearSent ? item.yearSent.toString() : "";
+      const filtered = skuData.filter(item => {
+        const itemName   = (item.name   || "").toLowerCase();
+        const itemSkuNorm= normalizeSku(item.sku || "");
+        const itemSent   = (item.sentIn || "").toLowerCase();
+        const itemYear   = item.yearSent ? item.yearSent.toString() : "";
 
         const matchesName = !nameQ || itemName.includes(nameQ);
         const matchesSku  = !skuQNorm || itemSkuNorm.includes(skuQNorm);
@@ -785,23 +757,81 @@ const ORDER_BREAKDOWN = {
         return matchesName && matchesSku && matchesSent && matchesYear;
       });
 
-      filtered.forEach((item) => skuGrid.appendChild(createCard(item)));
+      filtered.forEach(item => skuGrid.appendChild(createCard(item)));
 
       resultCount.textContent = filtered.length;
       emptyState.classList.toggle("hidden", filtered.length !== 0);
     }
 
-    // ========== LOAD CSV ==========
-    async function loadCsv() {
+    // ===== ORDER BREAKDOWN RENDERING =====
+    function applyOrderBreakdown(data) {
+      if (!data || !data.length) {
+        obWeekDisplay.textContent   = "TBD";
+        obGradesDisplay.textContent = "—";
+        Object.values(obBodies).forEach(el => { if (el) el.textContent = ""; });
+        return;
+      }
+
+      // find latest week
+      const weeks = Array.from(new Set(data.map(d => d.week))).filter(Boolean);
+      let currentWeek = "TBD";
+
+      if (weeks.length > 0) {
+        const numeric = weeks.map(w => parseInt(w, 10)).filter(n => !Number.isNaN(n));
+        if (numeric.length) {
+          currentWeek = String(Math.max(...numeric));
+        } else {
+          currentWeek = weeks[0];
+        }
+      }
+
+      const rowsForWeek = data.filter(d => d.week === currentWeek);
+
+      const categories = Array.from(
+        new Set(rowsForWeek.map(d => d.category))
+      ).filter(Boolean);
+
+      if (obWeekDisplay)   obWeekDisplay.textContent   = currentWeek;
+      if (obGradesDisplay) obGradesDisplay.textContent = categories.join(", ");
+
+      const CAT_LIST = ["FLO", "FOL", "UCO", "FHB", "TRP", "SPC"];
+
+      CAT_LIST.forEach(cat => {
+        const el = obBodies[cat];
+        if (!el) return;
+        const lines = rowsForWeek
+          .filter(d => d.category === cat)
+          .map(d =>
+            `${d.name} — SKU: ${d.sku} — Sent In: ${d.sentIn} — Year Sent: ${d.yearSent}`
+          );
+        el.textContent = lines.join("\n");
+      });
+    }
+
+    // ===== LOAD CSVs =====
+    async function loadSkuCsv() {
       try {
-        const res = await fetch(CSV_URL);
-        if (!res.ok) throw new Error("CSV not found");
+        const res = await fetch(SKU_CSV_URL);
+        if (!res.ok) throw new Error("SKU CSV not found");
         const text = await res.text();
-        skuData = parseCsv(text);
+        skuData = parseSkuCsv(text);
         renderList();
       } catch (err) {
         console.error(err);
-        alert("Error loading shared CSV. Make sure SKU_Name_2026.csv exists in your GitHub repo.");
+        alert("Error loading SKU_Name_2026.csv. Make sure it exists in your GitHub repo.");
+      }
+    }
+
+    async function loadOrderCsv() {
+      try {
+        const res = await fetch(ORDER_CSV_URL);
+        if (!res.ok) throw new Error("OrderBreakdown.csv not found");
+        const text = await res.text();
+        orderData = parseOrderCsv(text);
+        applyOrderBreakdown(orderData);
+      } catch (err) {
+        console.error(err);
+        // Silent fail for order breakdown: leave TBD if file not present
       }
     }
 
@@ -810,12 +840,13 @@ const ORDER_BREAKDOWN = {
     sentInFilter.addEventListener("input", renderList);
     yearFilter.addEventListener("change", renderList);
 
-    // Kick the whole thing off
-    loadCsv();
+    // Kick off data loading
+    loadSkuCsv();
+    loadOrderCsv();
   </script>
 </body>
 </html>
-``
+
 
 
 
