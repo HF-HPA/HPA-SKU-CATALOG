@@ -5,9 +5,9 @@
   <title>HF-HPA</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
- <!-- Favicon (must exist in repo root) -->
-  hpa_logo.png
-  
+  <!-- Website icon (favicon) – requires hpa_logo.png in repo root -->
+  <link rel="icon" type="image/png" href="hpa_logo.png" />
+
   <style>
     :root {
       --bg: #0b1720;
@@ -60,8 +60,8 @@
     }
 
     .logo {
-      width: 100px;
-      height: 100px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       object-fit: cover;
     }
@@ -351,7 +351,7 @@
       color: var(--text);
     }
 
-    /* UNDER CONSTRUCTION (Plant Care tab) */
+    /* PLANT CARE GUIDE */
     .under-construction {
       margin-top: 24px;
       padding: 24px;
@@ -382,8 +382,6 @@
       max-width: 420px;
     }
 
-    .popup h2 { margin-bottom: 8px; }
-
     .popup-close {
       margin-top: 12px;
       background: var(--accent);
@@ -399,86 +397,62 @@
 <body>
   <main class="app-shell">
 
-    <!-- HEADER --> 
-<header class="header">
-  <div class="header-left">
-    <img src="hf_logo.png" class="logo" alt="HF Logo" />
-    <div class="title-block">
-      <h1>HF-HPA</h1>
-      <p class="subtitle">Central Hub for HPA info.</p>
-    </div>
-  </div>
-</header>
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-left">
+        <!-- Visible logo -->
+        <img src="hf_logo.png" alt="HF logo" class="logo" />
+        <div class="title-block">
+          <h1>HF-HPA</h1>
+          <p class="subtitle">Central Hub for HPA info.</p>
+        </div>
+      </div>
+    </header>
 
-
-    <!-- TABS: 1) SKU Catalogue 2) Order Breakdown 3) Plant Care Guide -->
+    <!-- TABS -->
     <nav class="tabs">
       <button class="tab active" data-tab="catalog">SKU Catalogue</button>
       <button class="tab" data-tab="orders">Order Breakdown</button>
       <button class="tab" data-tab="care">Plant Care Guide</button>
     </nav>
 
-    <!-- TAB: SKU CATALOGUE -->
+    <!-- SKU CATALOGUE TAB -->
     <section id="tab-catalog" class="tab-content">
       <section class="controls">
         <div class="search-wrapper">
           <span class="search-icon">🔍</span>
-          <input
-            id="nameFilter"
-            class="search-input"
-            type="text"
-            placeholder="Filter by SKU name..."
-          />
+          <input id="nameFilter" class="search-input" placeholder="Filter by SKU name..." />
         </div>
 
         <div class="filters">
           <div class="filter-group">
             <span class="filter-label">SKU</span>
-            <input
-              id="skuFilter"
-              class="filter-input"
-              type="text"
-              placeholder="e.g. 1005-837-400 or 1005837400"
-            />
+            <input id="skuFilter" class="filter-input" placeholder="e.g. 1005-837-400 or 1005837400" />
           </div>
-
           <div class="filter-group">
             <span class="filter-label">Sent In</span>
-            <input
-              id="sentInFilter"
-              class="filter-input"
-              type="text"
-              placeholder="e.g. 6 or Promo"
-            />
+            <input id="sentInFilter" class="filter-input" placeholder="e.g. 6 or Promo" />
           </div>
-
           <div class="filter-group">
             <span class="filter-label">Year Sent</span>
             <select id="yearFilter" class="filter-input">
               <option value="all">All</option>
-              <option>2022</option>
-              <option>2023</option>
-              <option>2024</option>
-              <option>2025</option>
-              <option>2026</option>
+              <option>2022</option><option>2023</option>
+              <option>2024</option><option>2025</option><option>2026</option>
             </select>
           </div>
         </div>
       </section>
 
       <div class="results-header">
-        <div><strong id="resultCount">0</strong> SKUs shown</div>
-        <div>Click a card to view SKU details.</div>
+        <strong id="resultCount">0</strong> SKUs shown
       </div>
 
       <section id="skuGrid" class="sku-grid"></section>
-
-      <div id="emptyState" class="empty-state hidden">
-        No SKUs match your filters.
-      </div>
+      <div id="emptyState" class="empty-state hidden">No SKUs match your filters.</div>
     </section>
 
-    <!-- TAB: ORDER BREAKDOWN -->
+    <!-- ORDER BREAKDOWN TAB -->
     <section id="tab-orders" class="tab-content hidden">
       <div class="order-breakdown-wrapper">
         <div class="ob-header-stack">
@@ -491,49 +465,26 @@
         </div>
 
         <div class="ob-grid">
-          <div class="ob-box">
-            <div class="ob-box-title">FLO</div>
-            <div class="ob-box-body" id="obFloBody"></div>
-          </div>
-
-          <div class="ob-box">
-            <div class="ob-box-title">FOL</div>
-            <div class="ob-box-body" id="obFolBody"></div>
-          </div>
-
-          <div class="ob-box">
-            <div class="ob-box-title">UCO</div>
-            <div class="ob-box-body" id="obUcoBody"></div>
-          </div>
-
-          <div class="ob-box">
-            <div class="ob-box-title">FHB</div>
-            <div class="ob-box-body" id="obFhbBody"></div>
-          </div>
-
-          <div class="ob-box">
-            <div class="ob-box-title">TRP</div>
-            <div class="ob-box-body" id="obTrpBody"></div>
-          </div>
-
-          <div class="ob-box">
-            <div class="ob-box-title">SPC</div>
-            <div class="ob-box-body" id="obSpcBody"></div>
-          </div>
+          <div class="ob-box"><div class="ob-box-title">FLO</div><div id="obFloBody" class="ob-box-body"></div></div>
+          <div class="ob-box"><div class="ob-box-title">FOL</div><div id="obFolBody" class="ob-box-body"></div></div>
+          <div class="ob-box"><div class="ob-box-title">UCO</div><div id="obUcoBody" class="ob-box-body"></div></div>
+          <div class="ob-box"><div class="ob-box-title">FHB</div><div id="obFhbBody" class="ob-box-body"></div></div>
+          <div class="ob-box"><div class="ob-box-title">TRP</div><div id="obTrpBody" class="ob-box-body"></div></div>
+          <div class="ob-box"><div class="ob-box-title">SPC</div><div id="obSpcBody" class="ob-box-body"></div></div>
         </div>
       </div>
     </section>
 
-    <!-- TAB: PLANT CARE GUIDE -->
+    <!-- PLANT CARE GUIDE TAB -->
     <section id="tab-care" class="tab-content hidden">
       <div class="under-construction">
-        This section is under construction, check back on Spring Kick Off 2026.
+        This section is under construction. Check back on Spring Kick Off 2026.
       </div>
     </section>
 
   </main>
 
-  <!-- POPUP FOR SKU DETAILS -->
+  <!-- POPUP -->
   <div id="popupBackdrop" class="popup-backdrop">
     <div class="popup">
       <h2 id="popupName"></h2>
@@ -545,45 +496,45 @@
   </div>
 
   <script>
-    // ===== CONFIG =====
-    const SKU_CSV_URL   = "SKU_Name_2026.csv";   // main SKU list
-    const ORDER_CSV_URL = "OrderBreakdown.csv";  // order breakdown list
+    /* Paths */
+    const SKU_CSV_URL   = "SKU_Name_2026.csv";
+    const ORDER_CSV_URL = "OrderBreakdown.csv";
 
-    // Store-grade text per week (edit these as needed)
+    /* Store-grade text per week */
     const STORE_GRADES_BY_WEEK = {
-      "6": "All stores",
-      "7": "All Stores",
-      "8": "A/B",
-      "9": "SKIP",
+      "6":  "All stores",
+      "7":  "All Stores",
+      "8":  "A/B",
+      "9":  "SKIP",
       "10": "All Stores",
       "11": "All Stores",
       "12": "All Stores",
-      "13": "All Stores",
-      // Add "8": "A, C" etc. as needed
+      "13": "All Stores"
     };
 
     let skuData = [];
     let orderData = [];
 
-    // Tabs
+    /* Tabs */
     const tabs = document.querySelectorAll(".tab");
-    const tabCatalog = document.getElementById("tab-catalog");
-    const tabOrders  = document.getElementById("tab-orders");
-    const tabCare    = document.getElementById("tab-care");
-    const tabSections = { catalog: tabCatalog, orders: tabOrders, care: tabCare };
+    const tabSections = {
+      catalog: document.getElementById("tab-catalog"),
+      orders:  document.getElementById("tab-orders"),
+      care:    document.getElementById("tab-care"),
+    };
 
-    tabs.forEach(btn => {
-      btn.addEventListener("click", () => {
-        tabs.forEach(t => t.classList.remove("active"));
-        btn.classList.add("active");
-        const show = btn.dataset.tab;
-        Object.keys(tabSections).forEach(key => {
-          tabSections[key].classList.toggle("hidden", key !== show);
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        tabs.forEach((t) => t.classList.remove("active"));
+        tab.classList.add("active");
+        const show = tab.dataset.tab;
+        Object.entries(tabSections).forEach(([key, section]) => {
+          section.classList.toggle("hidden", key !== show);
         });
       });
     });
 
-    // Order breakdown DOM refs
+    /* ORDER BREAKDOWN DOM */
     const obWeekDisplay   = document.getElementById("obWeekDisplay");
     const obGradesDisplay = document.getElementById("obGradesDisplay");
     const obBodies = {
@@ -592,18 +543,19 @@
       UCO: document.getElementById("obUcoBody"),
       FHB: document.getElementById("obFhbBody"),
       TRP: document.getElementById("obTrpBody"),
-      SPC: document.getElementById("obSpcBody")
+      SPC: document.getElementById("obSpcBody"),
     };
 
-    // Filters & popup
-    const nameFilter    = document.getElementById("nameFilter");
-    const skuFilter     = document.getElementById("skuFilter");
-    const sentInFilter  = document.getElementById("sentInFilter");
-    const yearFilter    = document.getElementById("yearFilter");
-    const skuGrid       = document.getElementById("skuGrid");
-    const resultCount   = document.getElementById("resultCount");
-    const emptyState    = document.getElementById("emptyState");
+    /* SKU FILTER DOM */
+    const nameFilter   = document.getElementById("nameFilter");
+    const skuFilter    = document.getElementById("skuFilter");
+    const sentInFilter = document.getElementById("sentInFilter");
+    const yearFilter   = document.getElementById("yearFilter");
+    const skuGrid      = document.getElementById("skuGrid");
+    const resultCount  = document.getElementById("resultCount");
+    const emptyState   = document.getElementById("emptyState");
 
+    /* POPUP DOM */
     const popupBackdrop = document.getElementById("popupBackdrop");
     const popupName     = document.getElementById("popupName");
     const popupSku      = document.getElementById("popupSku");
@@ -611,232 +563,163 @@
     const popupYear     = document.getElementById("popupYear");
     const popupClose    = document.getElementById("popupClose");
 
-    popupClose.addEventListener("click", () => {
-      popupBackdrop.style.display = "none";
-    });
+    popupClose.addEventListener("click", () => popupBackdrop.style.display = "none");
     popupBackdrop.addEventListener("click", (e) => {
-      if (e.target === popupBackdrop) {
-        popupBackdrop.style.display = "none";
-      }
+      if (e.target === popupBackdrop) popupBackdrop.style.display = "none";
     });
 
-    // ===== CSV HELPERS =====
+    /* CSV HELPERS */
     function parseCsvLine(line) {
-      const result = [];
-      let current = "";
-      let inQuotes = false;
-
+      const out = [];
+      let cur = "";
+      let quote = false;
       for (let i = 0; i < line.length; i++) {
         const ch = line[i];
         if (ch === '"') {
-          if (inQuotes && line[i + 1] === '"') {
-            current += '"';
-            i++;
-          } else {
-            inQuotes = !inQuotes;
-          }
-        } else if (ch === "," && !inQuotes) {
-          result.push(current);
-          current = "";
+          if (quote && line[i + 1] === '"') { cur += '"'; i++; }
+          else { quote = !quote; }
+        } else if (ch === "," && !quote) {
+          out.push(cur); cur = "";
         } else {
-          current += ch;
+          cur += ch;
         }
       }
-      result.push(current);
-      return result;
+      out.push(cur);
+      return out;
     }
 
     function parseSkuCsv(text) {
-      const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
-      if (lines.length < 2) return [];
+      const lines = text.split(/\r?\n/).filter((l) => l.trim() !== "");
+      if (!lines.length) return [];
 
-      const header = lines[0].split(",").map(h => h.toLowerCase().trim());
+      const header = lines[0].split(",").map((h) => h.toLowerCase().trim());
       const yearIdx = header.indexOf("year sent");
       const nameIdx = header.indexOf("sku name");
       const skuIdx  = header.indexOf("sku");
       const sentIdx = header.indexOf("sent in");
 
-      const data = [];
-
-      for (let i = 1; i < lines.length; i++) {
-        const row = parseCsvLine(lines[i]);
-        if (!row.length) continue;
-
-        const item = {
-          yearSent: yearIdx >= 0 ? (row[yearIdx] || "").trim() : "",
-          name:     nameIdx >= 0 ? (row[nameIdx] || "").trim() : "",
-          sku:      skuIdx  >= 0 ? (row[skuIdx]  || "").trim() : "",
-          sentIn:   sentIdx >= 0 ? (row[sentIdx] || "").trim() : ""
+      return lines.slice(1).map((l) => {
+        const r = parseCsvLine(l);
+        return {
+          yearSent: (r[yearIdx] || "").trim(),
+          name:     (r[nameIdx] || "").trim(),
+          sku:      (r[skuIdx]  || "").trim(),
+          sentIn:   (r[sentIdx] || "").trim(),
         };
-
-        if (item.name && item.sku) {
-          data.push(item);
-        }
-      }
-
-      return data;
+      }).filter((x) => x.name && x.sku);
     }
 
-    // Order breakdown CSV: Week,Category,Size,Plant Name
     function parseOrderCsv(text) {
-      const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
-      if (lines.length < 2) return [];
+      const lines = text.split(/\r?\n/).filter((l) => l.trim() !== "");
+      if (!lines.length) return [];
 
-      const header = lines[0].split(",").map(h => h.toLowerCase().trim());
+      const header   = lines[0].split(",").map((h) => h.toLowerCase().trim());
       const weekIdx  = header.indexOf("week");
       const catIdx   = header.indexOf("category");
       const sizeIdx  = header.indexOf("size");
       const plantIdx = header.indexOf("plant name");
 
-      const data = [];
-
-      for (let i = 1; i < lines.length; i++) {
-        const row = parseCsvLine(lines[i]);
-        if (!row.length) continue;
-
-        const item = {
-          week:     weekIdx  >= 0 ? (row[weekIdx]  || "").trim() : "",
-          category: catIdx   >= 0 ? (row[catIdx]   || "").trim().toUpperCase() : "",
-          size:     sizeIdx  >= 0 ? (row[sizeIdx]  || "").trim() : "",
-          plant:    plantIdx >= 0 ? (row[plantIdx] || "").trim() : ""
+      return lines.slice(1).map((l) => {
+        const r = parseCsvLine(l);
+        return {
+          week:     (r[weekIdx]  || "").trim(),
+          category: (r[catIdx]   || "").trim().toUpperCase(),
+          size:     (r[sizeIdx]  || "").trim(),
+          plant:    (r[plantIdx] || "").trim(),
         };
-
-        if (item.week && item.category && (item.size || item.plant)) {
-          data.push(item);
-        }
-      }
-
-      return data;
+      }).filter((x) => x.week && x.category && (x.size || x.plant));
     }
 
-    // Normalize SKUs so filter ignores dashes/spaces
-    function normalizeSku(str) {
-      return (str || "")
-        .toString()
-        .toLowerCase()
-        .replace(/[^0-9a-z]/g, "");
-    }
+    const normalizeSku = (s) =>
+      (s || "").toLowerCase().replace(/[^0-9a-z]/g, "");
 
-    // ===== SKU CATALOG RENDERING =====
-    function createCard(item) {
-      const card = document.createElement("div");
-      card.className = "sku-card";
-
-      const pill = document.createElement("div");
-      pill.className = "sku-year-pill";
-      pill.textContent = item.yearSent || "—";
-
-      const name = document.createElement("div");
-      name.className = "sku-name";
-      name.textContent = item.name || "(No name)";
-
-      const meta = document.createElement("div");
-      meta.className = "sku-meta";
-      meta.innerHTML = `
-        <div><strong>SKU:</strong> ${item.sku || "—"}</div>
-        <div><strong>Sent In:</strong> ${item.sentIn || "—"}</div>
-        <div><strong>Year Sent:</strong> ${item.yearSent || "—"}</div>
-      `;
-
-      card.appendChild(pill);
-      card.appendChild(name);
-      card.appendChild(meta);
-
-      card.addEventListener("click", () => {
-        popupName.textContent = item.name || "(No name)";
-        popupSku.textContent = item.sku || "—";
-        popupSent.textContent = item.sentIn || "—";
-        popupYear.textContent = item.yearSent || "—";
-        popupBackdrop.style.display = "flex";
-      });
-
-      return card;
-    }
-
+    /* SKU RENDERING */
     function renderList() {
       skuGrid.innerHTML = "";
 
-      const nameQ   = (nameFilter.value   || "").toLowerCase();
-      const skuQNorm= normalizeSku(skuFilter.value || "");
-      const sentQ   = (sentInFilter.value|| "").toLowerCase();
-      const yearQ   = yearFilter.value;
+      const nameQ = (nameFilter.value || "").toLowerCase();
+      const skuQ  = normalizeSku(skuFilter.value || "");
+      const sentQ = (sentInFilter.value || "").toLowerCase();
+      const yearQ = yearFilter.value;
 
-      const filtered = skuData.filter(item => {
-        const itemName    = (item.name   || "").toLowerCase();
-        const itemSkuNorm = normalizeSku(item.sku || "");
-        const itemSent    = (item.sentIn || "").toLowerCase();
-        const itemYear    = item.yearSent ? item.yearSent.toString() : "";
+      const filtered = skuData.filter((item) => {
+        const itemName = (item.name   || "").toLowerCase();
+        const itemSku  = normalizeSku(item.sku || "");
+        const itemSent = (item.sentIn || "").toLowerCase();
+        const itemYear = item.yearSent || "";
 
-        const matchesName = !nameQ || itemName.includes(nameQ);
-        const matchesSku  = !skuQNorm || itemSkuNorm.includes(skuQNorm);
-        const matchesSent = !sentQ || itemSent.includes(sentQ);
-        const matchesYear = yearQ === "all" || itemYear === yearQ;
-
-        return matchesName && matchesSku && matchesSent && matchesYear;
+        return (!nameQ || itemName.includes(nameQ)) &&
+               (!skuQ  || itemSku.includes(skuQ)) &&
+               (!sentQ || itemSent.includes(sentQ)) &&
+               (yearQ === "all" || itemYear === yearQ);
       });
 
-      filtered.forEach(item => skuGrid.appendChild(createCard(item)));
+      filtered.forEach((item) => {
+        const card = document.createElement("div");
+        card.className = "sku-card";
+        card.innerHTML = `
+          <div class="sku-year-pill">${item.yearSent}</div>
+          <div class="sku-name">${item.name}</div>
+          <div class="sku-meta">
+            <div><strong>SKU:</strong> ${item.sku}</div>
+            <div><strong>Sent In:</strong> ${item.sentIn}</div>
+            <div><strong>Year Sent:</strong> ${item.yearSent}</div>
+          </div>
+        `;
+        card.addEventListener("click", () => {
+          popupName.textContent = item.name;
+          popupSku.textContent  = item.sku;
+          popupSent.textContent = item.sentIn;
+          popupYear.textContent = item.yearSent;
+          popupBackdrop.style.display = "flex";
+        });
+        skuGrid.appendChild(card);
+      });
 
       resultCount.textContent = filtered.length;
       emptyState.classList.toggle("hidden", filtered.length !== 0);
     }
 
-    // ===== ORDER BREAKDOWN RENDERING (Size + Plant Name) =====
-    function applyOrderBreakdown(data) {
-      if (!data || !data.length) {
-        if (obWeekDisplay)   obWeekDisplay.textContent   = "TBD";
-        if (obGradesDisplay) obGradesDisplay.textContent = "All stores";
-        Object.values(obBodies).forEach(el => { if (el) el.textContent = ""; });
+    /* ORDER BREAKDOWN RENDERING */
+    function applyOrderBreakdown(rows) {
+      if (!rows.length) {
+        obWeekDisplay.textContent = "TBD";
+        obGradesDisplay.textContent = "All stores";
+        Object.values(obBodies).forEach((el) => (el.textContent = ""));
         return;
       }
 
-      // 1) Find the latest week value
-      const weeks = Array.from(new Set(data.map(d => d.week))).filter(Boolean);
-      let currentWeek = "TBD";
+      // find latest week
+      const weeks = [...new Set(rows.map((r) => r.week))];
+      const numeric = weeks.map(Number).filter((n) => !Number.isNaN(n));
+      const latest = numeric.length ? Math.max(...numeric) : weeks[0];
 
-      if (weeks.length > 0) {
-        const numeric = weeks.map(w => parseInt(w, 10)).filter(n => !Number.isNaN(n));
-        if (numeric.length) {
-          currentWeek = String(Math.max(...numeric));
-        } else {
-          currentWeek = weeks[0];
+      const weekRows = rows.filter((r) => r.week == latest);
+
+      obWeekDisplay.textContent = latest;
+      obGradesDisplay.textContent =
+        STORE_GRADES_BY_WEEK[String(latest)] || "All stores";
+
+      const groups = { FLO: [], FOL: [], UCO: [], FHB: [], TRP: [], SPC: [] };
+
+      weekRows.forEach((r) => {
+        if (groups[r.category]) {
+          const size  = r.size  || "";
+          const plant = r.plant || "";
+          let line = "";
+          if (size && plant) line = `${size} — ${plant}`;
+          else line = size || plant;
+          if (line) groups[r.category].push(line);
         }
-      }
+      });
 
-      const rowsForWeek = data.filter(d => d.week === currentWeek);
-
-      // 2) Set Shipping Week # and Store Grade Shipping text
-      if (obWeekDisplay) {
-        obWeekDisplay.textContent = currentWeek;
-      }
-
-      if (obGradesDisplay) {
-        const gradesText = STORE_GRADES_BY_WEEK[currentWeek] || "All stores";
-        obGradesDisplay.textContent = gradesText;
-      }
-
-      // 3) Fill FLO/FOL/UCO/FHB/TRP/SPC boxes with "Size — Plant Name"
-      const CAT_LIST = ["FLO", "FOL", "UCO", "FHB", "TRP", "SPC"];
-
-      CAT_LIST.forEach(cat => {
+      Object.entries(groups).forEach(([cat, lines]) => {
         const el = obBodies[cat];
-        if (!el) return;
-
-        const lines = rowsForWeek
-          .filter(d => d.category === cat)
-          .map(d => {
-            const size  = d.size  || "";
-            const plant = d.plant || "";
-            if (size && plant) return `${size} — ${plant}`;
-            return size || plant || "";
-          })
-          .filter(Boolean);
-
-        el.textContent = lines.join("\n");
+        if (el) el.textContent = lines.join("\n");
       });
     }
 
-    // ===== LOAD CSVs =====
+    /* LOAD CSVs */
     async function loadSkuCsv() {
       try {
         const res = await fetch(SKU_CSV_URL);
@@ -846,7 +729,7 @@
         renderList();
       } catch (err) {
         console.error(err);
-        alert("Error loading SKU_Name_2026.csv. Make sure it exists in your GitHub repo.");
+        alert("Error loading SKU_Name_2026.csv. Make sure it exists in your repo.");
       }
     }
 
@@ -859,24 +742,19 @@
         applyOrderBreakdown(orderData);
       } catch (err) {
         console.error(err);
-        // If missing or broken, leave breakdown as TBD/All stores.
+        // if it fails, leave breakdown as default
       }
     }
 
+    /* Wire filters */
     nameFilter.addEventListener("input", renderList);
     skuFilter.addEventListener("input", renderList);
     sentInFilter.addEventListener("input", renderList);
     yearFilter.addEventListener("change", renderList);
 
-    // Kick off loading
+    /* Init */
     loadSkuCsv();
     loadOrderCsv();
   </script>
 </body>
 </html>
-
-
-
-
-
-
